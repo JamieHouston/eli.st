@@ -1,6 +1,8 @@
-import os
+from os.path import abspath, dirname, basename, join
 
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__)).decode('utf-8').replace('\\', '/')
+#PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__)).decode('utf-8').replace('\\', '/')
+ROOT_PATH = abspath(dirname(__file__))
+PROJECT_NAME = basename(ROOT_PATH)
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -10,6 +12,16 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+#LOGIN_URL          = '/account/login/'
+LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_CREATE_USERS          = True
+SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
+SOCIAL_AUTH_DEFAULT_USERNAME      = 'socialauth_user'
+SOCIAL_AUTH_COMPLETE_URL_NAME     = 'socialauth_complete'
+LOGIN_ERROR_URL                   = '/login/error/'
+SOCIAL_AUTH_ERROR_KEY             = 'socialauth_error'
 
 DATABASES = {
     'default': {
@@ -72,6 +84,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    join(ROOT_PATH, 'static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -108,26 +121,26 @@ ROOT_URLCONF = 'elist.urls'
 WSGI_APPLICATION = 'elist.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+    join(ROOT_PATH, 'templates')
 )
+
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.contrib.messages.context_processors.messages',
+    'social_auth.context_processors.social_auth_by_type_backends',
+)
+
+
 
 AUTHENTICATION_BACKENDS = (
     'social_auth.backends.twitter.TwitterBackend',
     'social_auth.backends.facebook.FacebookBackend',
-    'social_auth.backends.google.GoogleOAuthBackend',
     'social_auth.backends.google.GoogleOAuth2Backend',
     'social_auth.backends.google.GoogleBackend',
-    'social_auth.backends.yahoo.YahooBackend',
-    'social_auth.backends.browserid.BrowserIDBackend',
-    'social_auth.backends.contrib.linkedin.LinkedinBackend',
-    'social_auth.backends.contrib.livejournal.LiveJournalBackend',
-    'social_auth.backends.contrib.orkut.OrkutBackend',
-    'social_auth.backends.contrib.foursquare.FoursquareBackend',
-    'social_auth.backends.contrib.github.GithubBackend',
-    'social_auth.backends.contrib.vkontakte.VkontakteBackend',
-    'social_auth.backends.OpenIDBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -138,11 +151,11 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap_toolkit',
     'social_auth',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'account',
+    'south',
+    'django.contrib.admin',
 )
 
 # A sample logging configuration. The only tangible logging
