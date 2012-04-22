@@ -131,8 +131,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.contrib.messages.context_processors.messages',
     'social_auth.context_processors.social_auth_by_type_backends',
+    'mobiledetector.context_processors.mobile',
 )
-
 
 
 AUTHENTICATION_BACKENDS = (
@@ -156,6 +156,8 @@ INSTALLED_APPS = (
     'item',
     'django.contrib.admin',
     'south',
+    'debug_toolbar',
+    'django_extensions',
 )
 
 # A sample logging configuration. The only tangible logging
