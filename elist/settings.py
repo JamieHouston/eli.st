@@ -16,21 +16,21 @@ MANAGERS = ADMINS
 #LOGIN_URL          = '/account/login/'
 LOGIN_REDIRECT_URL = '/'
 
-SOCIAL_AUTH_CREATE_USERS          = True
+SOCIAL_AUTH_CREATE_USERS = True
 SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
-SOCIAL_AUTH_DEFAULT_USERNAME      = 'socialauth_user'
-SOCIAL_AUTH_COMPLETE_URL_NAME     = 'socialauth_complete'
-LOGIN_ERROR_URL                   = '/login/error/'
-SOCIAL_AUTH_ERROR_KEY             = 'socialauth_error'
+SOCIAL_AUTH_DEFAULT_USERNAME = 'socialauth_user'
+SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
+LOGIN_ERROR_URL = '/login/error/'
+SOCIAL_AUTH_ERROR_KEY = 'socialauth_error'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',                       # Or path to database file if using sqlite3.
+        'USER': '',                       # Not used with sqlite3.
+        'PASSWORD': '',                   # Not used with sqlite3.
+        'HOST': '',                       # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                       # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -139,7 +139,7 @@ AUTHENTICATION_BACKENDS = (
     'social_auth.backends.twitter.TwitterBackend',
     'social_auth.backends.facebook.FacebookBackend',
     'social_auth.backends.google.GoogleOAuth2Backend',
-    'social_auth.backends.google.GoogleBackend',
+    #'social_auth.backends.google.GoogleBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 

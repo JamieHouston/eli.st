@@ -27,11 +27,15 @@ from account.views import home, done, logout, error, form
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/images/32.ico'}),
+    (r'^robots\.txt$', 'django.views.generic.simple.direct_to_template', {'template': 'robots.txt', 'mimetype': 'text/plain'}),
+
     url(r'^$', home, name='home'),
     url(r'^done/$', done, name='done'),
     url(r'^error/$', error, name='error'),
     url(r'^logout/$', logout, name='logout'),
     url(r'^form/$', form, name='form'),
-    #url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^item/', 'item.views.inbox', name='inbox'),
     url(r'', include('social_auth.urls')),
 )

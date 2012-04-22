@@ -12,7 +12,7 @@ from social_auth.utils import setting
 def home(request):
     """Home view, displays login mechanism"""
     if request.user.is_authenticated():
-        return HttpResponseRedirect('done')
+        return HttpResponseRedirect('item')
     else:
         return render_to_response('account/authentication.html', {'version': version},
                                   RequestContext(request))
