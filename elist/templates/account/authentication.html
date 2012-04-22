@@ -5,30 +5,17 @@
 <script src="https://browserid.org/include.js" type="text/javascript"></script>
 {% endblock %}
 
-{% block heading %}Login using any of the following methods{% endblock %}
+{% block heading %}Login to eli.st{% endblock %}
 
 {% block content %}
 <div>
-  <h3>Login using <a href="http://oauth.net/" title="OAuth">OAuth</a> from:</h3>
   <ul>
   {% for name in social_auth.backends.oauth %}
     <li><a rel="nofollow" href="{% url socialauth_begin name %}">{{ name|title }}</a></li>
   {% endfor %}
-  </ul>
-</div>
-
-<div>
-  <h3>Login using <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-10" title="OAuth2">OAuth2</a> from:</h3>
-  <ul>
   {% for name in social_auth.backends.oauth2 %}
     <li><a rel="nofollow" href="{% url socialauth_begin name %}">{{ name|title }}</a></li>
   {% endfor %}
-  </ul>
-</div>
-
-<div>
-  <h3>Login using <a href="http://openid.net/" title="OpenId">OpenId</a> from:</h3>
-  <ul>
   {% for name in social_auth.backends.openid %}
     <li>
     {% if name != "livejournal" and name != "openid" %}
@@ -57,11 +44,7 @@
     {% endif %}
     </li>
   {% endfor %}
-  </ul>
-</div>
-
-<div>
-  <h3>Login using <a href="https://browserid.org/" title="BrowserID">BrowserID</a>:</h3>
+<li>
   <form method="post" action="{% url socialauth_complete "browserid" %}">
     <input type="hidden" name="assertion" value="" />
     <a rel="nofollow" id="browserid" href="#">BrowserID</a>
@@ -86,5 +69,6 @@
       });
     </script>
   </form>
-</div>
+</li>
+</ul>
 {% endblock %}

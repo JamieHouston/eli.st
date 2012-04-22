@@ -124,7 +124,6 @@ TEMPLATE_DIRS = (
     join(ROOT_PATH, 'templates')
 )
 
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
@@ -154,8 +153,9 @@ INSTALLED_APPS = (
     'bootstrap_toolkit',
     'social_auth',
     'account',
-    'south',
+    'item',
     'django.contrib.admin',
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging
