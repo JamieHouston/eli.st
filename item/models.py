@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import CustomUser
+from django.contrib.auth.models import User
 
 
 class Attribute(models.Model):
@@ -9,8 +9,11 @@ class Attribute(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=255)
-    created_by = models.ForeignKey(CustomUser)
+    created_by = models.ForeignKey(User)
     attributes = models.ManyToManyField(Attribute, through='ItemAttribute')
+
+    def __unicode__(self):
+        return self.name
 
     def add_attribute(self, attribute, value):
         item_attribute = ItemAttribute(attribute=attribute, value=value, item=self)

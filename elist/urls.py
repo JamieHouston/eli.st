@@ -36,6 +36,8 @@ urlpatterns = patterns('',
     url(r'^logout/$', logout, name='logout'),
     url(r'^form/$', form, name='form'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^item/', 'item.views.inbox', name='inbox'),
+    url(r'^item/$', 'item.views.inbox', name='inbox'),
+    url(r'^item/add/(?P<new_item>.+)$', 'item.views.add_item', name='add_item'),
+
     url(r'', include('social_auth.urls')),
 )
