@@ -3,15 +3,15 @@ from django.shortcuts import render_to_response
 from item.models import Item
 from django.http import HttpResponse
 from django.utils import simplejson
-#import pdb
 
 
 def inbox(request):
     if request.user.is_authenticated():
         #pdb.set_trace()
         items = Item.objects.filter(created_by=request.user)
-        return render_to_response('item/item_list.html', {'items': items},
-             context_instance=RequestContext(request))
+        return HttpResponse(simplejson.dumps(items), mimetype="application/json")
+        #return render_to_response('item/item_list.html', {'items': items},
+        #     context_instance=RequestContext(request))
     else:
         return render_to_response('account/authentication.html', {},
             RequestContext(request))

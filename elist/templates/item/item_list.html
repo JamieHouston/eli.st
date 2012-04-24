@@ -1,10 +1,12 @@
 {% extends "item/item_base.html" %}
+{% load templatetag_handlebars %}
 {% load bootstrap %}
-{% block title %}{{ list }}{% endblock %}
+{% block title %}Inbox{% endblock %}
 {% block scripts %}
+{% handlebars_js %}
 <script>
 $(document).ready(function() {
-    elist.UI.initListView();
+    elist.UI.initListView({{ items }});
 });
 
 </script>
@@ -21,12 +23,10 @@ $(document).ready(function() {
             <div class="row6">
                 <div id="items">
                     <div class="controls" id="items">
-                        {% for item in items %}
-                            {{ item|bootstrap}}
-                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {{ item|bootstrap}}
 {% endblock %}
