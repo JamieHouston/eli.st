@@ -28,5 +28,15 @@ $(document).ready(function() {
             </div>
         </div>
     </div>
-    {{ item|bootstrap}}
+
+{% tplhandlebars "item_row" %}
+<label class="checkbox" id="item_{{ pk }}">
+    <input type="checkbox" id="{{ pk }}">
+    <span>{{ name }}</span>
+    <div class="item-actions">
+        <i class="icon-trash delete-item"></i>
+    </div>
+</label>
+{% endtplhandlebars %}
+
 {% endblock %}

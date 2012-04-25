@@ -3,15 +3,13 @@ from django.shortcuts import render_to_response
 from item.models import Item
 from django.http import HttpResponse
 from django.utils import simplejson
+from django.core import serializers
 
 
 def inbox(request):
     if request.user.is_authenticated():
-        #pdb.set_trace()
-        items = Item.objects.filter(created_by=request.user)
-        return HttpResponse(simplejson.dumps(items), mimetype="application/json")
-        #return render_to_response('item/item_list.html', {'items': items},
-        #     context_instance=RequestContext(request))
+        return render_to_response('item/item_list.html', {},
+             context_instance=RequestContext(request))
     else:
         return render_to_response('account/authentication.html', {},
             RequestContext(request))
@@ -25,3 +23,9 @@ def add_item(request, new_item):
     item.save()
     result = {"name": item.name, "pk": item.pk}
     return HttpResponse(simplejson.dumps(result))
+
+
+def get_items(request):
+    items = Item.objects.filter(created_by=request.user)
+    results = serializers.serialize('json', items, fields=('name'))
+    return HttpResponse(results)

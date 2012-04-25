@@ -3,24 +3,32 @@ elist.UI = elist.UI || {};
 
 (function ($) {
     (function() {
-        this.initListView = function(items){
+        this.initListView = function(){
+
+            loadItems();
 
             $('body').on('click', '#add_item', addItem);
             $newItem = $('#new_item');
 
             runOnEnter($newItem, addItem);
 
-            for (var i = items.length - 1; i >= 0; i--) {
-                this.addToList(items[i]);
-            };
-
             $newItem.focus();
         };
 
-        this.addToList = function(item){
+        function loadItems(){
+            $.ajax('/item/all/', {
+                success: function(data){
+                    items = JSON.parse(data);
+                    for (var i = items.length - 1; i >= 0; i--) {
+                        addItemToList({pk: items[i].pk, name: items[i].fields.name});
+                    }
+                }
+            });
+        }
+
+        function addItemToList(item){
             template = getItemTemplate(item);
             $('#items').prepend(template);
-
         }
 
         function runOnEnter($target, action){
@@ -34,7 +42,7 @@ elist.UI = elist.UI || {};
             $.ajax('add/' + newItem, {
                 success: function(data){
                     item = JSON.parse(data);
-                    this.addToList(item);
+                    addItemToList(item);
                     $('#new_item').val('');
                 }
             });
