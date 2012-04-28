@@ -51,14 +51,14 @@ elist.UI = elist.UI || {};
         }
 
         function addItem(){
-            var formData = $('#new_item_form').serialize();
-            $.ajax('add/', formData {
-                success: function(data){
+            $.post('add/',
+                $('#new_item_form').serialize(),
+                function(data){
                     item = JSON.parse(data);
                     addItemToList(item);
                     $('#new_item').val('');
                 }
-            });
+            );
         }
 
         function getItemTemplate(item){

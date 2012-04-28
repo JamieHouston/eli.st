@@ -15,10 +15,7 @@ def inbox(request):
             RequestContext(request))
 
 
-def add_item(request, new_item):
-    #user = get_or_create_user(user_name)
-    #list = get_or_create_list(user, list_name)
-    #list.save()
+def add_item(request):
     if request.method == 'POST':
         item = Item(name=request.POST["new_item"], created_by=request.user, details=request.POST["item_details"])
         item.save()

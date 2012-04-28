@@ -8,7 +8,7 @@ class Attribute(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=255)
+    details = models.CharField(max_length=255)
     created_by = models.ForeignKey(User)
     attributes = models.ManyToManyField(Attribute, through='ItemAttribute')
 
