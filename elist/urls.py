@@ -38,7 +38,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^item/$', 'item.views.inbox', name='inbox'),
     url(r'^item/all/$', 'item.views.get_items', name='get_items'),
-    url(r'^item/add/(?P<new_item>.+)$', 'item.views.add_item', name='add_item'),
+    url(r'^item/add/$', 'item.views.add_item', name='add_item'),
 
     url(r'', include('social_auth.urls')),
 )

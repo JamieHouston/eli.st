@@ -13,21 +13,37 @@ $(document).ready(function() {
 {% endblock %}
 {% block content %}
     <div class="span6">
+        <form action="" method="POST" class="well form-inline" id="new_item_form">
+                {% csrf_token %}
         <div class="row-fluid">
-            <div class="form-inline">
-                <input type="text" placeholder="new item" id="new_item" name="new_item" class="input-large">
-                <input type="button" id="add_item" value="add" class="btn btn-success">
-            </div>
+            <h6>Add Item</h6>
+            <input type="text" placeholder="new item" id="new_item" name="new_item" class="input-large">
+            <input type="button" id="add_item" value="add" class="btn btn-success">
+            <span class="link" id="show_item_details">show details</span>
         </div>
-        <div class="row-fluid">
-            <div class="row6">
-                <div id="items">
-                    <div class="controls" id="items">
-                    </div>
+        <div class="row-fluid more-details" style="display:none;">
+            <textarea placeholder="details" name="item_details" id="item_details"></textarea>
+        </div>
+        <div class="row-fluid more-details" style="display:none;">
+            <h6>Details</h6>
+            <select name="item_attribute">
+                <option>Choose One...</option>
+                <option>Due Date</option>
+                <option>Priority</option>
+                <option>Tag</option>
+            </select>
+            <input type="text" placeholder="value" name="attribute_value" class="input-large">
+        </div>
+    </form>
+    <div class="row-fluid">
+        <div class="row6">
+            <div id="items">
+                <div class="controls" id="items">
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 {% tplhandlebars "item_row" %}
 <label class="checkbox" id="item_{{ pk }}">

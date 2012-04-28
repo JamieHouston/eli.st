@@ -55,6 +55,15 @@ td.link_row {
 	cursor: pointer;
 }
 
+.link{
+    cursor:pointer;
+    text-decoration:underline;
+}
+
+.link:hover{
+    font-weight:bold;
+}
+
 div.sidebar-nav{
 	font-size:16px;
 	text-align:right;

@@ -7,13 +7,26 @@ elist.UI = elist.UI || {};
 
             loadItems();
 
-            $('body').on('click', '#add_item', addItem);
+            $('body')
+                .on('click', '#add_item', addItem)
+                .on('click', '#show_item_details', toggleItemDetails)
+
             $newItem = $('#new_item');
 
             runOnEnter($newItem, addItem);
 
             $newItem.focus();
         };
+
+        function toggleItemDetails(){
+            var $details = $('.more-details');
+            if ($details.first().is(':visible')){
+                this.innerHTML = 'show details';
+            } else {
+                this.innerHTML = 'hide details';
+            }
+            $details.slideToggle();
+        }
 
         function loadItems(){
             $.ajax('/item/all/', {
@@ -38,8 +51,8 @@ elist.UI = elist.UI || {};
         }
 
         function addItem(){
-            var newItem = $('#new_item').val();
-            $.ajax('add/' + newItem, {
+            var formData = $('#new_item_form').serialize();
+            $.ajax('add/', formData {
                 success: function(data){
                     item = JSON.parse(data);
                     addItemToList(item);

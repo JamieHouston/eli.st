@@ -19,8 +19,9 @@ def add_item(request, new_item):
     #user = get_or_create_user(user_name)
     #list = get_or_create_list(user, list_name)
     #list.save()
-    item = Item(name=new_item, created_by=request.user)
-    item.save()
+    if request.method == 'POST':
+        item = Item(name=request.POST["new_item"], created_by=request.user, details=request.POST["item_details"])
+        item.save()
     result = {"name": item.name, "pk": item.pk}
     return HttpResponse(simplejson.dumps(result))
 
