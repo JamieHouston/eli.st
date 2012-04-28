@@ -20,7 +20,7 @@ class SimpleTest(unittest.TestCase):
 
 class ItemTests(unittest.TestCase):
     def test_user_can_have_items(self):
-        user = CustomUser(username="user1")
+        user = User(username="user1")
         user.save()
 
         item1 = Item(name="item 1", created_by=user)

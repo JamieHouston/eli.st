@@ -26,11 +26,8 @@ $(document).ready(function() {
         </div>
         <div class="row-fluid more-details" style="display:none;">
             <h6>Details</h6>
-            <select name="item_attribute">
+            <select name="item_attribute" id="item_attribute">
                 <option>Choose One...</option>
-                <option>Due Date</option>
-                <option>Priority</option>
-                <option>Tag</option>
             </select>
             <input type="text" placeholder="value" name="attribute_value" class="input-large">
         </div>
@@ -43,6 +40,25 @@ $(document).ready(function() {
             </div>
         </div>
     </div>
+</div>
+<div class="span4">
+    <form action="" method="POST" class="well form-inline" id="new_attribute_form">
+        {% csrf_token %}
+        <div class="row-fluid">
+            <h6>Add Attribute</h6>
+            <input type="text" placeholder="new attribute" id="new_attribute" name="new_attribute" class="input-large">
+            <select name="attribute_type" id="attribute_type">
+                <option value="TEXT">Text</option>
+                <option value="INT">Integer</option>
+                <option value="FLOAT">Float</option>
+                <option value="DATE">Date</option>
+                <option value="BOOLEAN">Boolean</option>
+                <option value="OBJECT">Object</option>
+                <option value="ENUM">Enum</option>
+            </select>
+            <input type="button" id="add_attribute" value="add" class="btn btn-success">
+        </div>
+    </form>
 </div>
 
 {% tplhandlebars "item_row" %}

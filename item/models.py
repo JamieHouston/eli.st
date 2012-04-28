@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import eav
-from eav.models import Attribute
+from eav.models import Attribute, Value
 
 #class Attribute(models.Model):
 #    name = models.CharField(max_length=20)
@@ -17,8 +17,10 @@ class Item(models.Model):
         return self.name
 
     def add_attribute(self, attribute, value):
-        self.eav[attribute] = value
-        self.save()
+        a = Attribute.objects.get(name=attribute)
+        Value.objects.create(entity=self, attribute=a, value_text=value)
+        #self.eav[attribute] = value
+        #self.save()
         #Attribute.objects.create(name='Weight', datatype=Attribute.TYPE_FLOAT)
         #item_attribute = ItemAttribute(attribute=attribute, value=value, item=self)
 

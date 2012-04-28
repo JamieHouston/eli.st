@@ -6,10 +6,12 @@ elist.UI = elist.UI || {};
         this.initListView = function(){
 
             loadItems();
+            loadAttributes();
 
             $('body')
                 .on('click', '#add_item', addItem)
                 .on('click', '#show_item_details', toggleItemDetails)
+                .on('click', '#add_attribute', addAttribute);
 
             $newItem = $('#new_item');
 
@@ -39,9 +41,26 @@ elist.UI = elist.UI || {};
             });
         }
 
+        function loadAttributes(){
+            $.ajax('/attribute/all/', {
+                success: function(data){
+                    items = JSON.parse(data);
+                    for (var i = items.length - 1; i >= 0; i--) {
+                        addAttributeToList({pk: items[i].pk, name: items[i].fields.name});
+                    }
+                }
+            });
+
+        }
+
         function addItemToList(item){
             template = getItemTemplate(item);
             $('#items').prepend(template);
+        }
+
+        function addAttributeToList(item){
+            var option = $('<option value="' + item.name + '">' + item.name + '</option>');
+            $('#item_attribute').append(option);
         }
 
         function runOnEnter($target, action){
@@ -57,6 +76,17 @@ elist.UI = elist.UI || {};
                     item = JSON.parse(data);
                     addItemToList(item);
                     $('#new_item').val('');
+                }
+            );
+        }
+
+        function addAttribute(){
+            $.post('/attribute/add/',
+                $('#new_attribute_form').serialize(),
+                function(data){
+                    item = JSON.parse(data);
+                    addAttributeToList(item);
+                    $('#new_attribute').val('');
                 }
             );
         }
