@@ -2,8 +2,11 @@ Django==1.4
 South==0.7.4
 django-bootstrap-toolkit==2.5.3
 django-debug-toolbar==0.9.4
+-e git://github.com/mvpdev/django-eav.git@24be357a3044a7d5aa0a3ae482766c158fd59dce#egg=django_eav-dev
 django-extensions==0.8
 django-social-auth==0.6.9
+django-templatetag-handlebars==1.1.0
 httplib2==0.7.4
 oauth2==1.5.211
 python-openid==2.2.5
+wsgiref==0.1.2

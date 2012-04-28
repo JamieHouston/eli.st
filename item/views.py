@@ -4,6 +4,7 @@ from item.models import Item
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core import serializers
+from eav.models import Attribute
 
 
 def inbox(request):
@@ -21,6 +22,12 @@ def add_item(request):
         item.save()
     result = {"name": item.name, "pk": item.pk}
     return HttpResponse(simplejson.dumps(result))
+
+
+def add_attribute(request):
+    if request.method == 'POST':
+        # TODO: Pass in datatype
+        Attribute.objects.get_or_create(name=request.POST["name"], datatype=Attribute.TYPE_TEXT)
 
 
 def get_items(request):
