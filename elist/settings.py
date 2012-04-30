@@ -25,8 +25,8 @@ SOCIAL_AUTH_ERROR_KEY = 'socialauth_error'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.',
-        'NAME': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'elist.db',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
