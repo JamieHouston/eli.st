@@ -107,7 +107,7 @@ INSTALLED_APPS = (
     'social_auth',
     'account',
     'item',
-    'eav',
+    #'eav',
     'django.contrib.admin',
     'templatetag_handlebars',
     #'south',

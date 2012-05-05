@@ -60,6 +60,6 @@ def get_attributes(request):
 
 def get_item(request, item_pk):
     item = Item.objects.get(pk=item_pk)
-    items = item.eav.get_values()
+    items = item.eav_values.all()
     results = serializers.serialize('json', items)
-    return HttpResponse(results)    
+    return HttpResponse(results)
