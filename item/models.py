@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 class Attribute(models.Model):
     name = models.CharField(max_length=20)
+    datatype = models.CharField(max_length=20)
 
 
 class Item(models.Model):
@@ -18,12 +19,12 @@ class Item(models.Model):
         return self.name
 
     def add_attribute(self, attribute, value):
-        a = Attribute.objects.get_or_create(name=attribute)
+        dbAttribute, created = Attribute.objects.get_or_create(name=attribute)
 #        Value.objects.create(entity=self, attribute=a, value_text=value)
         #self.eav[attribute] = value
         #self.save()
         #Attribute.objects.create(name='Weight', datatype=Attribute.TYPE_FLOAT)
-        item_attribute = ItemAttribute(attribute=a, value=value, item=self)
+        item_attribute = ItemAttribute(attribute=dbAttribute, value=value, item=self)
         item_attribute.save()
 
     def get_attributes(self):

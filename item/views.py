@@ -1,10 +1,9 @@
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from item.models import Item
+from item.models import Item, Attribute
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core import serializers
-from eav.models import Attribute
 
 
 def inbox(request):
@@ -36,8 +35,7 @@ def add_item(request):
 
 def add_attribute(request):
     if request.method == 'POST':
-        # TODO: Pass in datatype
-        attribute_type = eval("Attribute.TYPE_{0}".format(request.POST["attribute_type"]))
+        attribute_type = request.POST["attribute_type"]
         name = request.POST["new_attribute"]
 
         attribute, created = Attribute.objects.get_or_create(name=name, datatype=attribute_type)
@@ -60,6 +58,6 @@ def get_attributes(request):
 
 def get_item(request, item_pk):
     item = Item.objects.get(pk=item_pk)
-    items = item.eav_values.all()
+    items = item.itemattribute_set.all()
     results = serializers.serialize('json', items)
     return HttpResponse(results)
