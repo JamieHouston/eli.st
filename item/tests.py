@@ -2,6 +2,7 @@ from django.utils import unittest
 from item.models import Attribute, Item
 from django.contrib.auth.models import User
 import datetime
+from utils import nlp
 
 
 class UserTests(unittest.TestCase):
@@ -47,11 +48,16 @@ class ItemAttributeTest(UserTests):
         self.assertEqual(dbItem.pk, item.pk)
 
 
-# class NlpTests(unittest.TestCase):
-#     def test_add_item_on_date(self):
-#         name = "something tomorrow"
-#         tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-#         item = nlp.parse_item(name)
-#         self.assertEqual(item.name, "something")
-#         self.assertEqual(item.due, tomorrow)
+class ParseDateTests(unittest.TestCase):
+    def setUp(self):
+        self.parser = nlp.Parser()
 
+    def test_add_item_on_date(self):
+        text_input = "something tomorrow"
+        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+
+        item = Item()
+        chunks = self.parser.parse(text_input)
+        item.name, item.value = chunks
+        self.assertEqual(item.name, "something")
+        self.assertEqual(item.value, tomorrow)
