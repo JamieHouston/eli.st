@@ -1,0 +1,37 @@
+Add Commands
+"Massage with Jill at 7:45PM on 4/1"
+    {what: "massage", when: {date: "4/1/2012", time: "19:45"}, who: "Jill"}
+"Remind me to look at my bugs at work every morning at 9"
+    {where: {location:"work"}, when: {recurring: "daily", time: 0900, start_date: "<today>"}, what: "look at my bugs"}
+"Research linux on my phone or at work"
+    {what: "research linux", where: {location: ["phone", "work"]}}
+"Buy Lisa's mother's day gift today"
+    {attributes: {buy: "Lisa's mother's day gift"}, when: {date: "<today>"}}
+"Plan dinners every other Sunday"
+    {what: "plan dinner", when: {day: "Sunday", recurring: "bi-weekly", start_date: "<next Sunday>"}}
+"Plan June beer club online"
+    {what: "plan June beer club", atributes: {context: "online"}}
+"http://something.com"
+    {where: {link: "http://something.com"}, atributes: {context: "online"}}
+"Bob Smith phone 206-555-1234"
+    {who: "Bob Smith", where: {cell: 206-555-1234}}
+"Remind me at 5PM to buy chicken" or "Remind me to buy chicken at 5pm"
+    {when: {date: "<today>", time: 1700}, what: "buy chicken"}
+
+
+Action Commands
+"Text grocery to Lisa" ??
+    {action: "sms", who: "Lisa", attributes: ["grocery"]}
+
+
+Search Commmands
+"View 4/1"
+    {when: {date:"4/1/2012"}}
+"View upcoming massages"
+    {when: {start_date: "<today>"}, what: "massage"}
+"View massages with Jill"
+    {when: {start_date: "<today>"}, what: "massage", who: "Jill"}
+"View Lisa's schedule this week"
+    {when: {start_date: "<previous Sunday>", end_date: "<next Saturday>"}, who: "Lisa"}
+"Online"
+    {atributes: {context: "online"}}

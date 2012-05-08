@@ -2,7 +2,7 @@ from django.utils import unittest
 from item.models import Attribute, Item
 from django.contrib.auth.models import User
 import datetime
-from utils import nlp
+from utils import nlp, transform
 
 
 class UserTests(unittest.TestCase):
@@ -48,7 +48,12 @@ class ItemAttributeTest(UserTests):
         self.assertEqual(dbItem.pk, item.pk)
 
 
-class ParseDateTests(unittest.TestCase):
+class NlpTests(unittest.TestCase):
+    def setUp(self):
+        self.parser = nlp.Parser()
+
+
+class ParseDateTests(NlpTests):
     def setUp(self):
         self.parser = nlp.Parser()
 
@@ -63,12 +68,24 @@ class ParseDateTests(unittest.TestCase):
         self.assertEqual(item.value, tomorrow)
 
 
-class ViewTests(UserTests):
-    def setUp(self):
-        self.attribute = Attribute(datatype="DATE", name="Due")
-        self.item = Item(created_by=self.user)
+class NlpTests(NlpTests):
+    scenarios = (
+        ("Massage with Jill at 7:45PM on 4/1", {"what": "massage", "when": {"date": "4/1/2012", "time": "19:45"}, "who": "jill"}),
+    )
 
-    def test_response_of_dated_item(self):
-        pass
-        #views.add_item("bbq tomorrow")
-        # response should equal "bbq on tomorrow"
+    def test_scenarios(self):
+        for scenario in self.scenarios:
+            result = self.parser.parse_command(scenario[0])
+            comparison = transform.DictToObject(**scenario[1])
+
+        self.assertEqual(result.__dict__, comparison.__dict__)
+
+# class ViewTests(UserTests):
+#     def setUp(self):
+#         self.attribute = Attribute(datatype="DATE", name="Due")
+#         self.item = Item(created_by=self.user)
+
+#     def test_response_of_dated_item(self):
+#         pass
+#         #views.add_item("bbq tomorrow")
+#         # response should equal "bbq on tomorrow"

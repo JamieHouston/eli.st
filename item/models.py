@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-#import eav
-#from eav.models import Attribute, Value
+from timeDeltaField import TimedeltaField
 
 
 class Attribute(models.Model):
@@ -35,3 +34,18 @@ class ItemAttribute(models.Model):
     def __unicode__(self):
         if self.attribute.datatype == "DATE":
             return "on " + self.value
+
+
+class WhenCommand(models.Model):
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    recurring = TimedeltaField(blank=True)
+
+
+class ItemCommand(models.Model):
+    item = models.ForeignKey(Item)
+    who = models.CharField(max_length=50)
+    what = models.CharField(max_length=50)
+    where = models.CharField(max_length=50)
+    when = models.ForeignKey(WhenCommand)
+    #attributes = models.ManyToManyField(Attribute, through='ItemAttribute')
