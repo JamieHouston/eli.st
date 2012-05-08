@@ -29,17 +29,17 @@ class Parser(object):
         chunks = command_input.lower().split(' ')
         command = ItemCommand()
         result = {"what": []}
-        when = transform.tree()
+        # when = transform.tree()
         current = ""
         for index, chunk in enumerate(chunks):
             if chunk == "with":
                 current = "who"
                 result[current] = []
             elif chunk == "at":
-                current = when["date"]
+                current = "time"
                 result[current] = []
             elif chunk == "on":
-                current = when["time"]
+                current = "date"
                 result[current] = []
             elif len(current):
                 result[current].append(chunk)
