@@ -61,3 +61,14 @@ class ParseDateTests(unittest.TestCase):
         item.name, item.value = chunks
         self.assertEqual(item.name, "something")
         self.assertEqual(item.value, tomorrow)
+
+
+class ViewTests(UserTests):
+    def setUp(self):
+        self.attribute = Attribute(datatype="DATE", name="Due")
+        self.item = Item(created_by=self.user)
+
+    def test_response_of_dated_item(self):
+        pass
+        #views.add_item("bbq tomorrow")
+        # response should equal "bbq on tomorrow"

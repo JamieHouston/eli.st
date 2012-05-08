@@ -4,6 +4,14 @@ from item.models import Item, Attribute
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core import serializers
+from utils.nip import Parser
+
+
+def get_friendly_message(item):
+    response = [item.name]
+    for item_attribute in item.get_attributes():
+        response.push(item_attribute)
+    return response.join(' ')
 
 
 def inbox(request):
@@ -17,6 +25,9 @@ def inbox(request):
 
 def add_item(request):
     if request.method == 'POST':
+        parser = Parser()
+        chunks = parser.parse(text_input)
+        item.name, item.value = chunks
         item = Item(name=request.POST["new_item"], created_by=request.user, details=request.POST["item_details"])
 
         item.save()
@@ -26,10 +37,7 @@ def add_item(request):
 
         item.add_attribute(attribute_name, attribute_value)
 
-        #item.eav[request.POST["item_attribute"]] = request.POST["attribute_value"]
-        #item.save()
-
-        result = {"name": item.name, "pk": item.pk}
+        result = {"name": item.name, "pk": item.pk, "alert": "Added " + get_friendly_message(item)}
         return HttpResponse(simplejson.dumps(result))
 
 

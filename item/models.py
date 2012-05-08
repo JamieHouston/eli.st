@@ -20,10 +20,6 @@ class Item(models.Model):
 
     def add_attribute(self, attribute, value):
         dbAttribute, created = Attribute.objects.get_or_create(name=attribute)
-#        Value.objects.create(entity=self, attribute=a, value_text=value)
-        #self.eav[attribute] = value
-        #self.save()
-        #Attribute.objects.create(name='Weight', datatype=Attribute.TYPE_FLOAT)
         item_attribute = ItemAttribute(attribute=dbAttribute, value=value, item=self)
         item_attribute.save()
 
@@ -35,3 +31,7 @@ class ItemAttribute(models.Model):
     attribute = models.ForeignKey(Attribute)
     item = models.ForeignKey(Item)
     value = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        if self.attribute.datatype == "DATE":
+            return "on " + self.value
