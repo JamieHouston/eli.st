@@ -78,7 +78,8 @@ class NlpTests(NlpTests):
             result = self.parser.parse_command(scenario[0])
             comparison = transform.DictToObject(**scenario[1])
 
-        self.assertEqual(result.__dict__, comparison.__dict__)
+        for key in comparison.__dict__:
+            self.assertEqual(getAttr(result,key), comparison[key])
 
 # class ViewTests(UserTests):
 #     def setUp(self):
