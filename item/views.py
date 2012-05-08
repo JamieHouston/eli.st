@@ -1,10 +1,17 @@
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from item.models import Item
+from item.models import Item, Attribute
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core import serializers
-from eav.models import Attribute
+from utils.nip import Parser
+
+
+def get_friendly_message(item):
+    response = [item.name]
+    for item_attribute in item.get_attributes():
+        response.push(item_attribute)
+    return response.join(' ')
 
 
 def inbox(request):
@@ -18,6 +25,9 @@ def inbox(request):
 
 def add_item(request):
     if request.method == 'POST':
+        parser = Parser()
+        chunks = parser.parse(text_input)
+        item.name, item.value = chunks
         item = Item(name=request.POST["new_item"], created_by=request.user, details=request.POST["item_details"])
 
         item.save()
@@ -27,17 +37,13 @@ def add_item(request):
 
         item.add_attribute(attribute_name, attribute_value)
 
-        #item.eav[request.POST["item_attribute"]] = request.POST["attribute_value"]
-        #item.save()
-
-        result = {"name": item.name, "pk": item.pk}
+        result = {"name": item.name, "pk": item.pk, "alert": "Added " + get_friendly_message(item)}
         return HttpResponse(simplejson.dumps(result))
 
 
 def add_attribute(request):
     if request.method == 'POST':
-        # TODO: Pass in datatype
-        attribute_type = eval("Attribute.TYPE_{0}".format(request.POST["attribute_type"]))
+        attribute_type = request.POST["attribute_type"]
         name = request.POST["new_attribute"]
 
         attribute, created = Attribute.objects.get_or_create(name=name, datatype=attribute_type)
@@ -60,6 +66,6 @@ def get_attributes(request):
 
 def get_item(request, item_pk):
     item = Item.objects.get(pk=item_pk)
-    items = item.eav.get_values()
+    items = item.itemattribute_set.all()
     results = serializers.serialize('json', items)
-    return HttpResponse(results)    
+    return HttpResponse(results)
