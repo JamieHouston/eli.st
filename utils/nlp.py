@@ -6,10 +6,10 @@ Parse human-readable request including date or location
 
 import utils.parsedatetime as pdt
 import utils.parsedatetime_consts as pdc
-from utils import transform
+
 from time import mktime
 from datetime import date
-from item.models import ItemCommand
+from item.models import ItemCommand, WhenCommand
 
 
 class Parser(object):
@@ -29,23 +29,29 @@ class Parser(object):
         chunks = command_input.lower().split(' ')
         command = ItemCommand()
         result = {"what": []}
-        # when = transform.tree()
+        command.when = WhenCommand()
+
         current = ""
         for index, chunk in enumerate(chunks):
             if chunk == "with":
                 current = "who"
                 result[current] = []
             elif chunk == "at":
-                current = "time"
+                current = "when.start_date"
                 result[current] = []
             elif chunk == "on":
-                current = "date"
+                current = "when.time"
                 result[current] = []
             elif len(current):
                 result[current].append(chunk)
             else:
                 result["what"].append(chunk)
         for key in result:
-            setattr(command, key, ' '.join(result[key]))
+            parts = key.split(".")
+            if len(parts) == 2:
+                value = {parts[1]: ' '.join(result[key])}
+            else:
+                value = ' '.join(result[key])
+            setattr(command, parts[0], value)
 
         return command

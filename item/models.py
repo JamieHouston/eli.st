@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from timeDeltaField import TimedeltaField
+#from timeDeltaField import TimedeltaField
 
 
 class Attribute(models.Model):
@@ -38,8 +38,9 @@ class ItemAttribute(models.Model):
 
 class WhenCommand(models.Model):
     start_date = models.DateField(null=True, blank=True)
+    start_time = models.TimeField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-    recurring = TimedeltaField(blank=True)
+    #recurring = TimedeltaField(blank=True)
 
 
 class ItemCommand(models.Model):
