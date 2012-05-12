@@ -78,9 +78,27 @@ def run_command(request):
         parser = Parser()
         command = request.POST['command_text']
         response_data = parser.parse_command(command)
-        #results = serializers.serialize('json', response_data)
-        return HttpResponse(json.dumps(response_data))
+        #return json.dumps(response_data)
+        return get_json_response(convert_context_to_json(response_data))
+
+        #return HttpResponse(json.dumps(response_data))
         #return HttpResponse(json.dumps(response_data), mimetype="application/json")
     else:
         return render_to_response('item/command_parser.html', {},
              context_instance=RequestContext(request))
+
+
+def get_json_response(content, **httpresponse_kwargs):
+    "Construct an `HttpResponse` object."
+    return HttpResponse(content,
+                             content_type='application/json',
+                             **httpresponse_kwargs)
+
+
+def convert_context_to_json(context):
+    "Convert the context dictionary into a JSON object"
+    # Note: This is *EXTREMELY* naive; in reality, you'll need
+    # to do much more complex handling to ensure that arbitrary
+    # objects -- such as Django model instances or querysets
+    # -- can be serialized as JSON.
+    return json.dumps(context)

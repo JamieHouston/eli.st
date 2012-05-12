@@ -24,22 +24,25 @@ elist.UI = elist.UI || {};
             $('body')
                 .on('click', '#run_command', runCommand);
 
-            runOnEnter($('#command_text'), runCommand);
-        }
+            $commandText = $('#command_text');
+            runOnEnter($commandText, runCommand);
+            $commandText.focus();
+        };
 
         function runCommand(){
             $.post('/command/',
                 $('#command_form').serialize(),
                 function(data){
-                    result = JSON.parse(data);
-                    showCommandResults(item);
+                    result = data;
+                    showCommandResults(result);
                     $('#command_text').val('');
                 }
             );
         }
 
         function showCommandResults(result){
-            $('.command_result').val(result.what);
+            $('#command_result').text(result.what);
+            $('#command_alert').show();
             $('#command_alert').alert();
         }
 
