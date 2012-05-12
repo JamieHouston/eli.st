@@ -6,6 +6,7 @@ from django.utils import simplejson
 from django.core import serializers
 from utils.nlp import Parser
 import json
+import pdb
 
 
 def get_friendly_message(item):
@@ -76,8 +77,10 @@ def run_command(request):
     if request.method == 'POST':
         parser = Parser()
         command = request.POST['command_text']
-        response_data = parser.parse(command)
-        return HttpResponse(json.dumps(response_data), mimetype="application/json")
+        response_data = parser.parse_command(command)
+        #results = serializers.serialize('json', response_data)
+        return HttpResponse(json.dumps(response_data))
+        #return HttpResponse(json.dumps(response_data), mimetype="application/json")
     else:
         return render_to_response('item/command_parser.html', {},
              context_instance=RequestContext(request))
