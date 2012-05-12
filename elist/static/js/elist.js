@@ -35,13 +35,19 @@ elist.UI = elist.UI || {};
                 function(data){
                     result = data;
                     showCommandResults(result);
-                    $('#command_text').val('');
+                    $('#command_text').val('').focus();
                 }
             );
         }
 
         function showCommandResults(result){
-            $('#command_result').text(result.what);
+            $div = $('<div>');
+            for (key in result){
+                $info = $('<div>');
+                $info.text(key + ': ' + result[key])
+                $div.append($info)
+            }
+            $('#command_result').html($div);
             $('#command_alert').show();
             $('#command_alert').alert();
         }
