@@ -71,6 +71,12 @@ class ParseDateTests(NlpTests):
 class NlpTests(NlpTests):
     scenarios = (
         ("Massage with Jill at 7:45PM on 4/1", {"what": "massage", "when.start_date": "4/1", "when.start_time": "7:45pm", "who": "jill"}),
+        #("Plan dinners every other Sunday", {"what": "plan dinners", "when.start_date": "sunday", "when.recurrence.frequency": "2", "when.recurrent.period": "week"})
+        ("Plan dinners every other Sunday", {"what": "plan dinners", "when.recurrence": "every other sunday"}),
+        ("Add brocoli to grocery", {"what.item": "brocoli", "where.list": "grocery"}),
+        #("Add brocoli and carrots to grocery list", {"what.item": ["brocoli", "carrots"], "where.list": "grocery"}),
+        ("Add brocoli and carrots to grocery list", {"what.item": "brocoli and carrots", "where.list": "grocery"}),
+        ("The doctor on May 7th", {"what": "doctor", "when.start_date": "may 7th"}),
     )
 
     def test_scenarios(self):

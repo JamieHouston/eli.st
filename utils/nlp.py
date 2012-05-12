@@ -6,10 +6,10 @@ Parse human-readable request including date or location
 
 import utils.parsedatetime as pdt
 import utils.parsedatetime_consts as pdc
+from nltk.corpus import wordnet
 
 from time import mktime
 from datetime import date
-from item.models import ItemCommand, WhenCommand
 
 
 class Parser(object):
@@ -25,31 +25,48 @@ class Parser(object):
         return_date = date.fromtimestamp(mktime(date_struct[0]))
         return name, return_date
 
+    def new_type(self, current, singularize=False):
+        self.current = current
+        self.result[current] = []
+        self.singularize = singularize
+
     def parse_command(self, command_input):
+
         chunks = command_input.lower().split(' ')
         #command = ItemCommand()
-        result = {"what": []}
+        self.result = {}
         #command.when = WhenCommand()
 
-        current = ""
+        self.current = ""
+        self.singularize = False
         for index, chunk in enumerate(chunks):
-            if chunk == "with":
-                current = "who"
-                result[current] = []
+            if chunk == "add" and index == 0:
+                self.new_type("what.item")
+            elif chunk == "to" and self.current == "what.item":
+                self.new_type("where.list", True)
+            elif chunk == "with":
+                self.new_type("who")
+            elif chunk == "every":
+                self.new_type("when.recurrence")
             elif chunk == "at":
-                current = "when.start_time"
-                result[current] = []
+                self.new_type("when.start_time")
             elif chunk == "on":
-                current = "when.start_date"
-                result[current] = []
-            elif len(current):
-                result[current].append(chunk)
+                self.new_type("when.start_date")
+            elif len(self.current):
+                if not self.current.endswith(chunk):
+                    if self.singularize:
+                        chunk = wordnet.morphy(chunk)
+                    self.result[self.current].append(chunk)
             else:
-                result["what"].append(chunk)
+                if not "what" in self.result:
+                    self.result["what"] = []
+                if not (chunk == "the" and len(self.result["what"]) == 0):
+                    self.result["what"].append(chunk)
 
-        for key in result:
-            result[key] = ' '.join(result[key])
-        return result
+        command_result = {}
+        for key in self.result:
+            command_result[key] = ' '.join(self.result[key])
+        return command_result
 
         # for key in result:
         #     parts = key.split(".")
