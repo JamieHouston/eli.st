@@ -4,7 +4,8 @@ from item.models import Item, Attribute
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core import serializers
-from utils.nip import Parser
+from utils.nlp import Parser
+import json
 
 
 def get_friendly_message(item):
@@ -69,3 +70,14 @@ def get_item(request, item_pk):
     items = item.itemattribute_set.all()
     results = serializers.serialize('json', items)
     return HttpResponse(results)
+
+
+def run_command(request):
+    if request.method == 'POST':
+        parser = Parser()
+        command = request.POST['command_text']
+        response_data = parser.parse(command)
+        return HttpResponse(json.dumps(response_data), mimetype="application/json")
+    else:
+        return render_to_response('item/command_parser.html', {},
+             context_instance=RequestContext(request))

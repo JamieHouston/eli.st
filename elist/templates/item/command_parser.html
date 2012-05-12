@@ -1,0 +1,33 @@
+{% extends "item/item_base.html" %}
+{% block title %}Marvin{% endblock %}
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    elist.UI.initMarvin();
+});
+</script>
+{% endblock %}
+{% block content %}
+    <div class="span6">
+        <form action="" method="POST" class="well form-inline" id="command_form">
+                {% csrf_token %}
+        <div class="row-fluid">
+            <h6>Command</h6>
+            <input type="text" placeholder="enter a command" id="command_text" name="command_text" class="input-large">
+            <input type="button" id="run_command" value="do it" class="btn btn-success">
+        </div>
+    </form>
+    <div class="row-fluid">
+        <div class="row6">
+        	<div class="alert fade in" id="command_alert" style="display:none;">
+            	<button class="close" data-dismiss="alert">×</button>
+            	<div class="command_result"></div>
+          	</div>
+            <div id="items">
+                <div class="controls" id="items">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

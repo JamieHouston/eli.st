@@ -20,6 +20,29 @@ elist.UI = elist.UI || {};
             $newItem.focus();
         };
 
+        this.initMarvin = function(){
+            $('body')
+                .on('click', '#run_command', runCommand);
+
+            runOnEnter($('#command_text'), runCommand);
+        }
+
+        function runCommand(){
+            $.post('/command/',
+                $('#command_form').serialize(),
+                function(data){
+                    result = JSON.parse(data);
+                    showCommandResults(item);
+                    $('#command_text').val('');
+                }
+            );
+        }
+
+        function showCommandResults(result){
+            $('.command_result').val(result.what);
+            $('#command_alert').alert();
+        }
+
         function toggleItemDetails(){
             var $details = $('.more-details');
             if ($details.first().is(':visible')){

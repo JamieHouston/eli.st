@@ -42,6 +42,6 @@ urlpatterns = patterns('',
     url(r'^item/add/$', 'item.views.add_item', name='add_item'),
     url(r'^item/(?P<item_pk>\d+)/$', 'item.views.get_item', name='get_item'),
     url(r'^attribute/add/$', 'item.views.add_attribute', name='add_attribute'),
-
+    url(r'^command/$', 'item.views.run_command', name='run_command'),
     url(r'', include('social_auth.urls')),
 )

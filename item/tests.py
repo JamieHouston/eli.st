@@ -70,16 +70,19 @@ class ParseDateTests(NlpTests):
 
 class NlpTests(NlpTests):
     scenarios = (
-        ("Massage with Jill at 7:45PM on 4/1", {"what": "massage", "when": {"date": "4/1/2012", "time": "19:45"}, "who": "jill"}),
+        ("Massage with Jill at 7:45PM on 4/1", {"what": "massage", "when.start_date": "4/1", "when.start_time": "7:45pm", "who": "jill"}),
     )
 
     def test_scenarios(self):
         for scenario in self.scenarios:
+            #result = self.parser.parse_command(scenario[0])
             result = self.parser.parse_command(scenario[0])
-            comparison = transform.DictToObject(**scenario[1])
+            #comparison = transform.DictToObject(**scenario[1])
+            comparison = scenario[1]
 
-        for key in comparison.__dict__:
-            self.assertEqual(getAttr(result,key), comparison[key])
+        self.assertDictEqual(result, comparison)
+        #for key in comparison.__dict__:
+        #    self.assertEqual(getAttr(result,key), comparison[key])
 
 # class ViewTests(UserTests):
 #     def setUp(self):

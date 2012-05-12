@@ -27,9 +27,9 @@ class Parser(object):
 
     def parse_command(self, command_input):
         chunks = command_input.lower().split(' ')
-        command = ItemCommand()
+        #command = ItemCommand()
         result = {"what": []}
-        command.when = WhenCommand()
+        #command.when = WhenCommand()
 
         current = ""
         for index, chunk in enumerate(chunks):
@@ -37,21 +37,26 @@ class Parser(object):
                 current = "who"
                 result[current] = []
             elif chunk == "at":
-                current = "when.start_date"
+                current = "when.start_time"
                 result[current] = []
             elif chunk == "on":
-                current = "when.time"
+                current = "when.start_date"
                 result[current] = []
             elif len(current):
                 result[current].append(chunk)
             else:
                 result["what"].append(chunk)
-        for key in result:
-            parts = key.split(".")
-            if len(parts) == 2:
-                value = {parts[1]: ' '.join(result[key])}
-            else:
-                value = ' '.join(result[key])
-            setattr(command, parts[0], value)
 
-        return command
+        for key in result:
+            result[key] = ' '.join(result[key])
+        return result
+
+        # for key in result:
+        #     parts = key.split(".")
+        #     if len(parts) == 2:
+        #         value = {parts[1]: ' '.join(result[key])}
+        #     else:
+        #         value = ' '.join(result[key])
+        #     setattr(command, parts[0], value)
+
+        # return command
