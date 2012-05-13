@@ -31,7 +31,7 @@ elist.UI = elist.UI || {};
 
         function runCommand(){
             $.post('/command/',
-                $('#command_form').serialize(),
+                {command_text: $('#command_text').val()},
                 function(data){
                     result = data;
                     showCommandResults(result);

@@ -6,6 +6,7 @@ Parse human-readable request including date or location
 
 import utils.parsedatetime as pdt
 import utils.parsedatetime_consts as pdc
+from utils import transform
 from nltk.corpus import wordnet
 import re
 
@@ -19,12 +20,10 @@ class Parser(object):
         c.BirthdayEpoch = 12
         self.parser = pdt.Calendar(c)
 
-    def parse(self, text_input):
-        chunks = text_input.split(' ')
-        name = chunks[0]
-        date_struct = self.parser.parse(chunks[1])
+    def parse_natural_date(self, text_input):
+        date_struct = self.parser.parse(text_input)
         return_date = date.fromtimestamp(mktime(date_struct[0]))
-        return name, return_date
+        return return_date
 
     def new_type(self, current, singularize=False):
         self.current = current
@@ -47,6 +46,22 @@ class Parser(object):
             command_result[key] = ' '.join(self.result[key])
 
         return command_result
+
+    def map_command(self, command_input):
+        unflattened = transform.unflatten_dict(command_input)
+        result = {}
+        for key, val in unflattened.iteritems():
+            result[key] = {}
+            if key == "when":
+                for key_type in val:
+                    if key_type == "start_date":
+                        result[key][key_type] = self.parse_natural_date(val[key_type])
+                        #val[key_type] = parsed
+                    elif key_type == "start_time":
+                        result[key][key_type] = self.parse_natural_date(val[key_type])
+            else:
+                result[key] = val
+        return result
 
     def add_default(self, chunk):
         if len(self.current):
