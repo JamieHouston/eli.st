@@ -3,6 +3,7 @@ from item.models import Attribute, Item
 from django.contrib.auth.models import User
 import datetime
 from utils import nlp, transform
+import pdb
 
 
 class UserTests(unittest.TestCase):
@@ -70,14 +71,37 @@ class ParseDateTests(NlpTests):
 
 class NlpTests(NlpTests):
     scenarios = (
-        ("Massage with Jill at 7:45PM on 4/1", {"what": "massage", "when.start_date": "4/1", "when.start_time": "7:45pm", "who": "jill"}),
+        (
+            "Massage with Jill at 7:45PM on 4/1",
+            {"what": "massage", "when.start_date": "4/1", "when.start_time": "7:45pm", "who": "jill"},
+            {"what": "massage", "when": {"start_date": "4/1/2012", "start_time": "19:45"}, "who": "jill"},
+        ),
         #("Plan dinners every other Sunday", {"what": "plan dinners", "when.start_date": "sunday", "when.recurrence.frequency": "2", "when.recurrent.period": "week"})
-        ("Plan dinners every other Sunday", {"what": "plan dinners", "when.recurrence": "every other sunday"}),
-        ("Add brocoli to grocery", {"what.item": "brocoli", "where.list": "grocery"}),
-        #("Add brocoli and carrots to grocery list", {"what.item": ["brocoli", "carrots"], "where.list": "grocery"}),
-        ("Add brocoli and carrots to grocery list", {"what.item": "brocoli and carrots", "what.list": "grocery"}),
-        ("The doctor on May 7th", {"what": "doctor", "when.start_date": "may 7th"}),
-        ("Text grocery to Lisa", {"what.list": "grocery", "action": "text", "who": "lisa"})
+        (
+            "Plan dinners every other Sunday",
+            {"what": "plan dinners", "when.recurrence": "every other sunday"},
+            {"what": "plan dinners", "when": {"start_date": "5/13/2012", "recurrence": {"frequency": 2, "period": "week"}}},
+        ),
+        (
+            "Add brocoli to grocery",
+            {"what.item": "brocoli", "what.list": "grocery"},
+            {"what": {"item": "brocoli", "list": "grocery"}},
+        ),
+        (
+            "Add brocoli and carrots to grocery list",
+            {"what.item": "brocoli and carrots", "what.list": "grocery"},
+            {"what": {"item": ["brocoli", "carrots"], "list": "grocery"}},
+        ),
+        (
+            "The doctor on May 7th",
+            {"what": "doctor", "when.start_date": "may 7th"},
+            {"what": "doctor", "when": {"start_date": "may 7th"}},
+        ),
+        (
+            "Text grocery to Lisa",
+            {"what.list": "grocery", "action": "text", "who": "lisa"},
+            {"what.list": "grocery", "action": "text", "who": "lisa"},
+        )
     )
 
     def test_scenarios(self):
@@ -86,8 +110,17 @@ class NlpTests(NlpTests):
             result = self.parser.parse_command(scenario[0])
             #comparison = transform.DictToObject(**scenario[1])
             comparison = scenario[1]
+            #pdb.set_trace()
+            self.assertDictEqual(result, comparison)
 
-        self.assertDictEqual(result, comparison)
+    def test_npl_mapping(self):
+        pass
+        #for scenario in self.scenarios:
+            #result = self.parser.map_command(scenario[1])
+            #comparison = scenario[2]
+            #self.assertDictEqual(result, comparison)
+
+
         #for key in comparison.__dict__:
         #    self.assertEqual(getAttr(result,key), comparison[key])
 

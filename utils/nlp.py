@@ -81,6 +81,7 @@ class Parser(object):
                 self.new_type("who")
             elif chunk == "every":
                 self.new_type("when.recurrence")
+                self.result[self.current] = [chunk]
             elif chunk == "at":
                 self.new_type("when.start_time")
             elif chunk == "on":
