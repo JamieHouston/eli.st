@@ -76,7 +76,7 @@ class Parser(object):
             if chunk == "add" and index == 0:
                 self.new_type("what.item")
             elif chunk == "to" and self.current == "what.item":
-                self.new_type("where.list", True)
+                self.new_type("what.list", True)
             elif chunk == "with":
                 self.new_type("who")
             elif chunk == "every":

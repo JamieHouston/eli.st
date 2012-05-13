@@ -44,8 +44,8 @@ elist.UI = elist.UI || {};
             $div = $('<div>');
             for (key in result){
                 $info = $('<div>');
-                $info.text(key + ': ' + result[key])
-                $div.append($info)
+                $info.text(key + ': ' + result[key]);
+                $div.append($info);
             }
             $('#command_result').html($div);
             $('#command_alert').show();
