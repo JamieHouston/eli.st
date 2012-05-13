@@ -7,6 +7,7 @@ Parse human-readable request including date or location
 import utils.parsedatetime as pdt
 import utils.parsedatetime_consts as pdc
 from nltk.corpus import wordnet
+import re
 
 from time import mktime
 from datetime import date
@@ -31,11 +32,43 @@ class Parser(object):
         self.singularize = singularize
 
     def parse_command(self, command_input):
-
         chunks = command_input.lower().split(' ')
-        #command = ItemCommand()
         self.result = {}
-        #command.when = WhenCommand()
+
+        #if re.match('text', command_input):
+        if chunks[0] == "text":
+            self.result["action"] = [chunks[0]]
+            command_result = self.parse_text(chunks[1:])
+        else:
+            command_result = self.parse_request(chunks)
+
+        command_result = {}
+        for key in self.result:
+            command_result[key] = ' '.join(self.result[key])
+
+        return command_result
+
+    def add_default(self, chunk):
+        if len(self.current):
+            if not self.current.endswith(chunk):
+                if self.singularize:
+                    chunk = wordnet.morphy(chunk)
+                self.result[self.current].append(chunk)
+        else:
+            if not "what" in self.result:
+                self.result["what"] = []
+            if not (chunk == "the" and len(self.result["what"]) == 0):
+                self.result["what"].append(chunk)
+
+    def parse_text(self, chunks):
+        self.new_type("what.list")
+        for index, chunk in enumerate(chunks):
+            if chunk == "to":
+                self.new_type("who")
+            else:
+                self.add_default(chunk)
+
+    def parse_request(self, chunks):
 
         self.current = ""
         self.singularize = False
@@ -52,21 +85,8 @@ class Parser(object):
                 self.new_type("when.start_time")
             elif chunk == "on":
                 self.new_type("when.start_date")
-            elif len(self.current):
-                if not self.current.endswith(chunk):
-                    if self.singularize:
-                        chunk = wordnet.morphy(chunk)
-                    self.result[self.current].append(chunk)
             else:
-                if not "what" in self.result:
-                    self.result["what"] = []
-                if not (chunk == "the" and len(self.result["what"]) == 0):
-                    self.result["what"].append(chunk)
-
-        command_result = {}
-        for key in self.result:
-            command_result[key] = ' '.join(self.result[key])
-        return command_result
+                self.add_default(chunk)
 
         # for key in result:
         #     parts = key.split(".")

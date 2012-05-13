@@ -77,6 +77,7 @@ class NlpTests(NlpTests):
         #("Add brocoli and carrots to grocery list", {"what.item": ["brocoli", "carrots"], "where.list": "grocery"}),
         ("Add brocoli and carrots to grocery list", {"what.item": "brocoli and carrots", "where.list": "grocery"}),
         ("The doctor on May 7th", {"what": "doctor", "when.start_date": "may 7th"}),
+        ("Text grocery to Lisa", {"what.list": "grocery", "action": "text", "who": "lisa"})
     )
 
     def test_scenarios(self):
