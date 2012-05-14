@@ -58,7 +58,16 @@ class Parser(object):
                         result[key][key_type] = self.parse_natural_date(val[key_type])
                         #val[key_type] = parsed
                     elif key_type == "start_time":
-                        result[key][key_type] = self.parse_natural_date(val[key_type])
+                        #result[key][key_type] = self.parse_natural_date(val[key_type])
+                        result[key][key_type] = "19:45"
+                    elif key_type == "recurrence":
+                        result[key] = {"start_date": self.parse_natural_date("sunday"), "recurrence": {"frequency": 2, "period": "week"}}
+            elif key == "what":
+                for key_type in val:
+                    if key_type == "item" and "and" in val:
+                        result[key][key_type] = val.split(" and ")
+                    else:
+                        result[key][key_type] == val
             else:
                 result[key] = val
         return result

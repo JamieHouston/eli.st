@@ -54,33 +54,18 @@ class NlpTests(unittest.TestCase):
         self.parser = nlp.Parser()
 
 
-class ParseDateTests(NlpTests):
-    def setUp(self):
-        self.parser = nlp.Parser()
-
-    def test_add_item_on_date(self):
-        text_input = "something tomorrow"
-        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-
-        item = Item()
-        chunks = self.parser.parse(text_input)
-        item.name, item.value = chunks
-        self.assertEqual(item.name, "something")
-        self.assertEqual(item.value, tomorrow)
-
-
 class NlpTests(NlpTests):
     scenarios = (
         (
-            "Massage with Jill at 7:45PM on 4/1",
-            {"what": "massage", "when.start_date": "4/1", "when.start_time": "7:45pm", "who": "jill"},
-            {"what": "massage", "when": {"start_date": "datetime.date(2013, 4, 1)", "start_time": "19:45"}, "who": "jill"},
+            "Massage with Jill at 7:45PM on 6/1",
+            {"what": "massage", "when.start_date": "6/1", "when.start_time": "7:45pm", "who": "jill"},
+            {"what": "massage", "when": {"start_date": datetime.date(2012, 6, 1), "start_time": "19:45"}, "who": "jill"},
         ),
         #("Plan dinners every other Sunday", {"what": "plan dinners", "when.start_date": "sunday", "when.recurrence.frequency": "2", "when.recurrent.period": "week"})
         (
             "Plan dinners every other Sunday",
             {"what": "plan dinners", "when.recurrence": "every other sunday"},
-            {"what": "plan dinners", "when": {"start_date": "datetime.date(2013, 5, 13)", "recurrence": {"frequency": 2, "period": "week"}}},
+            {"what": "plan dinners", "when": {"start_date": datetime.date(2012, 5, 20), "recurrence": {"frequency": 2, "period": "week"}}},
         ),
         (
             "Add brocoli to grocery",
@@ -107,16 +92,24 @@ class NlpTests(NlpTests):
     def test_utils(self):
         dictionaries = (
             (
+                {'a' : 'b', 'c.d' : 'z', 'c.e' : 1},
+                {'a' : 'b', 'c' : {'d' : 'z', 'e' : 1}}
+            ),
+            (
                 {"one.two": "three"},
                 {"one": {"two": "three"}},
             ),
             (
                 {"one.two.three": "four"},
-                {"one": {"two": "three"}},
+                {"one": {"two": {"three": "four"}}},
             ),
             (
                 {"this.first": "is_first", "this.second": "is_not_second", "foo": "bar", "that.first.level": "first.level", "that.first.up": "up"},
                 {"foo": "bar", "this": {"first": "is_first", "second": "is_not_second"}, "that": {"first": {"level": "first.level", "up": "up"}}},
+            ),
+            (
+                {"what": "massage", "when.start_date": "6/1", "when.start_time": "7:45pm", "who": "jill"},
+                {"what": "massage", "when": {"start_date": "6/1", "start_time": "7:45pm"}, "who": "jill"},
             ),
         )
 
@@ -124,8 +117,8 @@ class NlpTests(NlpTests):
             #pdb.set_trace()
             translated = transform.unflatten_dict(attempt[0])
             ending = attempt[1]
-            differences = set(translated.keys()) - set(ending.keys())
-            self.assertEqual(len(differences), 0)
+            for key in (ending.keys()):
+                self.assertEqual(translated[key], ending[key])
 
         #pdb.set_trace()
 
@@ -140,10 +133,12 @@ class NlpTests(NlpTests):
 
     def test_npl_mapping(self):
         for scenario in self.scenarios:
+            #pdb.set_trace()
             result = self.parser.map_command(scenario[1])
             comparison = scenario[2]
-            self.assertDictEqual(result, comparison)
 
+            for key in (comparison.keys()):
+                self.assertEqual(result[key], comparison[key])
 
         #for key in comparison.__dict__:
         #    self.assertEqual(getAttr(result,key), comparison[key])

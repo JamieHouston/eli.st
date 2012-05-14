@@ -10,7 +10,20 @@ def tree():
     return defaultdict(tree)
 
 
-def unflatten_dict(flat_dict):
+def unflatten_dict(dictionary):
+    resultDict = dict()
+    for key, value in dictionary.iteritems():
+        parts = key.split(".")
+        d = resultDict
+        for part in parts[:-1]:
+            if part not in d:
+                d[part] = dict()
+            d = d[part]
+        d[parts[-1]] = value
+    return resultDict
+
+
+def unflatten_dictx(flat_dict):
     #result = tree()
     result = {}
     for key, val in flat_dict.iteritems():
