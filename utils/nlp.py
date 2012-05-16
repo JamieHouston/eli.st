@@ -9,7 +9,7 @@ import utils.parsedatetime_consts as pdc
 from utils import transform
 from nltk.corpus import wordnet
 import re
-
+import pdb
 from time import mktime
 from datetime import date
 
@@ -60,13 +60,16 @@ class Parser(object):
                     elif key_type == "start_time":
                         #result[key][key_type] = self.parse_natural_date(val[key_type])
                         result[key][key_type] = "19:45"
-                    elif key_type == "recurrence":
-                        result[key] = {"start_date": self.parse_natural_date("sunday"), "recurrence": {"frequency": 2, "period": "week"}}
+                    else:
+                        result[key][key_type] = val
+                    #elif key_type == "recurrence":
+                    #    result[key] = {"start_date": self.parse_natural_date("sunday"), "recurrence": {"frequency": 2, "period": "week"}}
             elif key == "what":
                 for key_type in val:
                     if key_type == "item" and "and" in val:
                         result[key][key_type] = val.split(" and ")
                     else:
+                        #pdb.set_trace()
                         result[key][key_type] == val
             else:
                 result[key] = val

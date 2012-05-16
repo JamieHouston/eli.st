@@ -35,3 +35,15 @@ Search Commmands
     {when: {start_date: "<previous Sunday>", end_date: "<next Saturday>"}, who: "Lisa"}
 "Online"
     {atributes: {context: "online"}}
+
+
+Did You Know (show new one each time until they say no more):
+    "To add items to a list, you can use the long form:
+        'add bananas to grocery list'
+    or the shortcut:
+        'grocery: bananas'"
+
+    "To view a list of items, you can use the long form:
+        'view grocery list'
+    or the shortcut:
+        'groceries'"

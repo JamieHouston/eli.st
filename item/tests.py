@@ -62,11 +62,11 @@ class NlpTests(NlpTests):
             {"what": "massage", "when": {"start_date": datetime.date(2012, 6, 1), "start_time": "19:45"}, "who": "jill"},
         ),
         #("Plan dinners every other Sunday", {"what": "plan dinners", "when.start_date": "sunday", "when.recurrence.frequency": "2", "when.recurrent.period": "week"})
-        (
-            "Plan dinners every other Sunday",
-            {"what": "plan dinners", "when.recurrence": "every other sunday"},
-            {"what": "plan dinners", "when": {"start_date": datetime.date(2012, 5, 20), "recurrence": {"frequency": 2, "period": "week"}}},
-        ),
+        # (
+        #     "Plan dinners every other Sunday",
+        #     {"what": "plan dinners", "when.recurrence": "every other sunday"},
+        #     {"what": "plan dinners", "when": {"start_date": datetime.date(2012, 5, 20), "recurrence": {"frequency": 2, "period": "week"}}},
+        # ),
         (
             "Add brocoli to grocery",
             {"what.item": "brocoli", "what.list": "grocery"},
