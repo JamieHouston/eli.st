@@ -77,7 +77,7 @@ def run_command(request):
     if request.method == 'POST':
         parser = Parser()
         command = request.POST['command_text']
-        response_data = parser.parse_command(command)
+        response_data = parser.get_natural_command(command)
         #return json.dumps(response_data)
         return get_json_response(convert_context_to_json(response_data))
 

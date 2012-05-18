@@ -21,24 +21,13 @@ elist.UI = elist.UI || {};
         };
 
         this.initMarvin = function(){
-            $('body')
-                .on('click', '#run_command', runCommand);
+            $('#command_form').submit(function(){
+                runCommand();
+                return false;
+            });
 
-            $commandText = $('#command_text');
-            runOnEnter($commandText, runCommand);
-            $commandText.focus();
+            $('#command_text').focus();
         };
-
-        function runCommand(){
-            $.post('/command/',
-                {command_text: $('#command_text').val()},
-                function(data){
-                    result = data;
-                    showCommandResults(result);
-                    $('#command_text').val('').focus();
-                }
-            );
-        }
 
         function showCommandResults(result){
             $div = $('<div>');
@@ -47,6 +36,9 @@ elist.UI = elist.UI || {};
                 $info.text(key + ': ' + result[key]);
                 $div.append($info);
             }
+            $options = $('<div>');
+            $options.append($('<span>').text('cancel'));
+            $div.append($options);
             $('#command_result').html($div);
             $('#command_alert').show();
             $('#command_alert').alert();
@@ -97,8 +89,22 @@ elist.UI = elist.UI || {};
 
         function runOnEnter($target, action){
             $target.on('keyup', function(e){
-                if (e.keyCode == 13) action();
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    action();
+                }
             });
+        }
+
+        function runCommand(){
+            $.post('/command/',
+                $('#command_form').serialize(),
+                function(data){
+                    result = data;
+                    showCommandResults(result);
+                    $('#command_text').val('').focus();
+                }
+            );
         }
 
         function addItem(){

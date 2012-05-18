@@ -55,11 +55,18 @@ class NlpTests(unittest.TestCase):
 
 
 class NlpTests(NlpTests):
+    today = datetime.date.today()
+    start_today = str(today)
+    jan_first = datetime.date((today.year + 1), 1, 1)
+    start_jan_first = str(jan_first)
+    tomorrow = today + datetime.timedelta(1)
+    start_tomorrow = str(tomorrow)
+
     scenarios = (
         (
-            "Massage with Jill at 7:45PM on 6/1",
-            {"what": "massage", "when.start_date": "6/1", "when.start_time": "7:45pm", "who": "jill"},
-            {"what": "massage", "when": {"start_date": datetime.date(2012, 6, 1), "start_time": "19:45"}, "who": "jill"},
+            "Massage with Jill at 7:45PM on 1/1",
+            {"what.item": "massage", "when.start_date": "1/1", "when.start_time": "7:45pm", "who": "jill"},
+            {"what": {"item": "massage"}, "when": {"start_date": start_jan_first, "start_time": "19:45"}, "who": "jill"},
         ),
         #("Plan dinners every other Sunday", {"what": "plan dinners", "when.start_date": "sunday", "when.recurrence.frequency": "2", "when.recurrent.period": "week"})
         # (
@@ -78,16 +85,40 @@ class NlpTests(NlpTests):
             {"what": {"item": ["brocoli", "carrots"], "list": "grocery"}},
         ),
         (
-            "The doctor on May 7th",
-            {"what": "doctor", "when.start_date": "may 7th"},
-            {"what": "doctor", "when": {"start_date": "may 7th"}},
+            "The doctor on January 1st",
+            {"what.item": "doctor", "when.start_date": "january 1st"},
+            {"what": {"item": "doctor"}, "when": {"start_date": start_jan_first}},
         ),
         (
             "Text grocery to Lisa",
             {"what.list": "grocery", "action": "text", "who": "lisa"},
-            {"what.list": "grocery", "action": "text", "who": "lisa"},
+            {"what": {"list": "grocery"}, "action": "text", "who": "lisa"},
+        ),
+        (
+            "Pickup library books tomorrow",
+            {"what.item": "pickup library books tomorrow"},
+            {"what": {"item": "pickup library books"}, "when": {"start_date": start_tomorrow}},
         )
     )
+
+    def test_scenarios(self):
+        for scenario in self.scenarios:
+            #result = self.parser.parse_command(scenario[0])
+            result = self.parser.parse_command(scenario[0])
+            #comparison = transform.DictToObject(**scenario[1])
+            comparison = scenario[1]
+            #pdb.set_trace()
+            self.assertDictEqual(result, comparison)
+
+    def test_npl_mapping(self):
+        for scenario in self.scenarios:
+            #pdb.set_trace()
+            result = self.parser.map_command(scenario[1])
+            comparison = scenario[2]
+            #pdb.set_trace()
+            for key in (comparison.keys()):
+                #pdb.set_trace()
+                self.assertEqual(result[key], comparison[key])
 
     def test_utils(self):
         dictionaries = (
@@ -121,24 +152,6 @@ class NlpTests(NlpTests):
                 self.assertEqual(translated[key], ending[key])
 
         #pdb.set_trace()
-
-    def test_scenarios(self):
-        for scenario in self.scenarios:
-            #result = self.parser.parse_command(scenario[0])
-            result = self.parser.parse_command(scenario[0])
-            #comparison = transform.DictToObject(**scenario[1])
-            comparison = scenario[1]
-            #pdb.set_trace()
-            self.assertDictEqual(result, comparison)
-
-    def test_npl_mapping(self):
-        for scenario in self.scenarios:
-            #pdb.set_trace()
-            result = self.parser.map_command(scenario[1])
-            comparison = scenario[2]
-
-            for key in (comparison.keys()):
-                self.assertEqual(result[key], comparison[key])
 
         #for key in comparison.__dict__:
         #    self.assertEqual(getAttr(result,key), comparison[key])

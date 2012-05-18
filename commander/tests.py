@@ -47,7 +47,7 @@ class TestCommandParser(unittest.TestCase):
             after = scenario[1]
             if type(before) is list:
                 for command in before:
-                    print "comparing {0} to {1}".format(command, after)
+                    #print "comparing {0} to {1}".format(command, after)
                     self.compare(command, after)
             else:
                 self.compare(before, after)

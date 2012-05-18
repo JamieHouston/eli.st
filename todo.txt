@@ -1,3 +1,7 @@
+Learn lists
+"Add brocoli to grocery" - creates "grocery" list
+"Grocery" - shows everything on grocery list
+
 Add Commands
 "Massage with Jill at 7:45PM on 4/1"
     {what: "massage", when: {date: "4/1/2012", time: "19:45"}, who: "Jill"}
