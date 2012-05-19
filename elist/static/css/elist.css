@@ -22,6 +22,15 @@ div.item-actions i{
 	float:right;
 }
 
+span.data{
+    text-decoration:underline;
+}
+
+span.data:hover{
+    background-color: yellow;
+    cursor:pointer;
+}
+
 i.move-item{
 	cursor: move;
 }

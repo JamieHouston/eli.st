@@ -28,7 +28,7 @@ def inbox(request):
 def add_item(request):
     if request.method == 'POST':
         parser = Parser()
-        chunks = parser.parse_command(text_input)
+        chunks = parser.get_natural_command(text_input)
         item.name, item.value = chunks
         item = Item(name=request.POST["new_item"], created_by=request.user, details=request.POST["item_details"])
 
