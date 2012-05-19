@@ -1,6 +1,10 @@
 {% extends "item/item_base.html" %}
+{% load templatetag_handlebars %}
+
 {% block title %}Marvin{% endblock %}
 {% block scripts %}
+{% handlebars_js %}
+
 <script>
 $(document).ready(function() {
     elist.UI.initMarvin();
@@ -30,4 +34,19 @@ $(document).ready(function() {
         </div>
     </div>
 </div>
+{% tplhandlebars "command_info" %}
+<div class="alert fade in">
+    <button class="close" data-dismiss="alert">×</button>
+    <div>What: {{ what.item }}</div>
+    {{ #if what.list }}
+    <div>List: {{ what.list }}</div>
+    {{ /if}}
+    <div>When: {{ when.start_date }}</div>
+    <div>Who: {{ who }}</div>
+    <div class="item-actions">
+        <i class="icon-trash delete-item"></i>
+    </div>
+</div>
+{% endtplhandlebars %}
+
 {% endblock %}

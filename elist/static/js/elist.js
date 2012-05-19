@@ -30,6 +30,8 @@ elist.UI = elist.UI || {};
         };
 
         function showCommandResults(result){
+            showCommandResult(result);
+            /*
             $div = $('<div>');
             for (key in result){
                 $info = $('<div>');
@@ -42,6 +44,7 @@ elist.UI = elist.UI || {};
             $('#command_result').html($div);
             $('#command_alert').show();
             $('#command_alert').alert();
+            */
         }
 
         function toggleItemDetails(){
@@ -75,6 +78,11 @@ elist.UI = elist.UI || {};
                 }
             });
 
+        }
+
+        function showCommandResult(command_result){
+            template = getCommandTemplate(command_result);
+            $('#items').prepend(template);
         }
 
         function addItemToList(item){
@@ -127,6 +135,12 @@ elist.UI = elist.UI || {};
                     $('#new_attribute').val('');
                 }
             );
+        }
+
+        function getCommandTemplate(command_result){
+            var template = Handlebars.compile($('#command_info').html()),
+            rendered = template(command_result);
+            return rendered;
         }
 
         function getItemTemplate(item){
