@@ -37,6 +37,9 @@ $(document).ready(function() {
 {% tplhandlebars "command_info" %}
 <div class="alert fade in">
     <button class="close" data-dismiss="alert">×</button>
+    {{ #if action }}
+    <div>Action: <span>{{ action}}</span></div>
+    {{ /if }}
     <div>What: <span class="data">{{ what.item }}</span></div>
     {{ #if what.list }}
     <div>List: <span class="data">{{ what.list }}</span></div>

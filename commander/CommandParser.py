@@ -1,11 +1,15 @@
 import pdb
-import re, os, imp, sys
+import os
+import imp
+import sys
 from collections import defaultdict
 
-home = os.getcwd()
+home = os.path.dirname(__file__)
+
 
 def tree():
     return defaultdict(tree)
+
 
 class Commander(object):
     # TODO: Add config or way to say which modules or modules.parsers to use
@@ -18,11 +22,11 @@ class Commander(object):
 
         filenames = []
         modules = []
-
-        for fn in os.listdir(os.path.join(home, 'modules')):
+        module_path = os.path.join(home, 'modules')
+        for fn in os.listdir(module_path):
                 if fn.endswith('.py') and not fn.startswith('_'):
                     filenames.append(os.path.join(home, 'modules', fn))
-        
+
         for filename in filenames:
             name = os.path.basename(filename)[:-3]
             try:
@@ -33,27 +37,29 @@ class Commander(object):
 
                 self.register(module)
                 modules.append(name)
-
         if modules:
             print >> sys.stderr, 'Registered modules:', ', '.join(modules)
         else:
             print >> sys.stderr, "Warning: Couldn't find any modules"
+
+
 
     def register(self, module):
         def bind(self, func):
 
             # register documentation
             if not hasattr(func, 'name'):
-                func.name = func.__name__
+                func.name = func.__class__.__name__
             if hasattr(func, 'example'):
                 self.examples[func.name] = func.example
             self.parsers.append(func)
 
         if hasattr(module, 'parsers'):
             for func in module.parsers:
-                if hasattr(func, 'setup'):
-                        func.setup()
-                bind(self, func)
+                parser = func()
+                if hasattr(parser, 'setup'):
+                        parser.setup()
+                bind(self, parser)
 
     def parse_command(self, command):
         result = tree()
@@ -64,10 +70,10 @@ class Commander(object):
                 break
 
             # TODO: is this the right way to do this?
-            command, result = parser(command, result)
+            command, result = parser.parse_command(command, result)
 
         # TODO: Pull this into function as well:
-        if len(command) and result["what"]["item"] is None:
+        if command and result["what"]["item"] is None:
             result["what"]["item"] = command
 
         return result

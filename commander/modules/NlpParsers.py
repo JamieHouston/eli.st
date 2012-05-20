@@ -1,21 +1,11 @@
-#!/usr/bin/env python
-
-"""
-Parse human-readable request including date or location
-"""
-
 import utils.parsedatetime as pdt
 import utils.parsedatetime_consts as pdc
 from utils import transform, words
-#from nltk.corpus import wordnet
-import re
-import pdb
 from time import mktime
 from datetime import date
 
 
-class Parser(object):
-
+class ManualParser(object):
     def __init__(self):
         c = pdc.Constants()
         c.BirthdayEpoch = 12
@@ -31,11 +21,11 @@ class Parser(object):
         self.result[current] = []
         self.singularize = singularize
 
-    def get_natural_command(self, command_input):
-        parsed = self.parse_command(command_input)
-        return self.map_command(parsed)
+    def parse_command(self, command, result):
+        parsed = self._parse_command(command)
+        return None, self.map_command(parsed)
 
-    def parse_command(self, command_input):
+    def _parse_command(self, command_input):
         chunks = command_input.lower().split(' ')
         self.result = {}
 
@@ -143,3 +133,7 @@ class Parser(object):
                 self.new_type("when.start_date")
             else:
                 self.add_default(chunk)
+
+parsers = (
+    ManualParser,
+    )

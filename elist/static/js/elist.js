@@ -83,6 +83,7 @@ elist.UI = elist.UI || {};
         function showCommandResult(command_result){
             template = getCommandTemplate(command_result);
             $('#items').prepend(template);
+            $('#items').prepend(JSON.stringify(command_result));
         }
 
         function addItemToList(item){

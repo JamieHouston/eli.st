@@ -4,7 +4,8 @@ from item.models import Item, Attribute
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core import serializers
-from utils.nlp import Parser
+#from utils.nlp import Parser
+from commander.CommandParser import Commander
 import json
 import pdb
 
@@ -25,59 +26,62 @@ def inbox(request):
             RequestContext(request))
 
 
-def add_item(request):
-    if request.method == 'POST':
-        parser = Parser()
-        chunks = parser.get_natural_command(text_input)
-        item.name, item.value = chunks
-        item = Item(name=request.POST["new_item"], created_by=request.user, details=request.POST["item_details"])
+# def add_item(request):
+#     if request.method == 'POST':
+#         parser = Parser()
+#         chunks = parser.get_natural_command(text_input)
+#         item.name, item.value = chunks
+#         item = Item(name=request.POST["new_item"], created_by=request.user, details=request.POST["item_details"])
 
-        item.save()
+#         item.save()
 
-        attribute_name = request.POST["item_attribute"]
-        attribute_value = request.POST["attribute_value"]
+#         attribute_name = request.POST["item_attribute"]
+#         attribute_value = request.POST["attribute_value"]
 
-        item.add_attribute(attribute_name, attribute_value)
+#         item.add_attribute(attribute_name, attribute_value)
 
-        result = {"name": item.name, "pk": item.pk, "alert": "Added " + get_friendly_message(item)}
-        return HttpResponse(simplejson.dumps(result))
-
-
-def add_attribute(request):
-    if request.method == 'POST':
-        attribute_type = request.POST["attribute_type"]
-        name = request.POST["new_attribute"]
-
-        attribute, created = Attribute.objects.get_or_create(name=name, datatype=attribute_type)
-
-        result = {"name": attribute.name, "pk": attribute.pk}
-        return HttpResponse(simplejson.dumps(result))
+#         result = {"name": item.name, "pk": item.pk, "alert": "Added " + get_friendly_message(item)}
+#         return HttpResponse(simplejson.dumps(result))
 
 
-def get_items(request):
-    items = Item.objects.filter(created_by=request.user)
-    results = serializers.serialize('json', items, fields=('name', 'pk'))
-    return HttpResponse(results)
+# def add_attribute(request):
+#     if request.method == 'POST':
+#         attribute_type = request.POST["attribute_type"]
+#         name = request.POST["new_attribute"]
+
+#         attribute, created = Attribute.objects.get_or_create(name=name, datatype=attribute_type)
+
+#         result = {"name": attribute.name, "pk": attribute.pk}
+#         return HttpResponse(simplejson.dumps(result))
 
 
-def get_attributes(request):
-    items = Attribute.objects.all()
-    results = serializers.serialize('json', items, fields=('name', 'pk'))
-    return HttpResponse(results)
+# def get_items(request):
+#     items = Item.objects.filter(created_by=request.user)
+#     results = serializers.serialize('json', items, fields=('name', 'pk'))
+#     return HttpResponse(results)
 
 
-def get_item(request, item_pk):
-    item = Item.objects.get(pk=item_pk)
-    items = item.itemattribute_set.all()
-    results = serializers.serialize('json', items)
-    return HttpResponse(results)
+# def get_attributes(request):
+#     items = Attribute.objects.all()
+#     results = serializers.serialize('json', items, fields=('name', 'pk'))
+#     return HttpResponse(results)
+
+
+# def get_item(request, item_pk):
+#     item = Item.objects.get(pk=item_pk)
+#     items = item.itemattribute_set.all()
+#     results = serializers.serialize('json', items)
+#     return HttpResponse(results)
 
 
 def run_command(request):
     if request.method == 'POST':
-        parser = Parser()
+        parser_commander = Commander()
+        parser_commander.setup()
+
         command = request.POST['command_text']
-        response_data = parser.get_natural_command(command)
+        #pdb.set_trace()
+        response_data = parser_commander.parse_command(command)
         #return json.dumps(response_data)
         return get_json_response(convert_context_to_json(response_data))
 
