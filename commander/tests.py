@@ -1,12 +1,12 @@
 import unittest
-from CommandParser import Parser
+from CommandParser import Commander
 
 
 class TestCommandParser(unittest.TestCase):
     scenarios = (
     (
         ["Add brocoli to grocery", "add brocoli to the grocery list"],
-        {"what.item": "brocoli", "what.list": "grocery"},
+        #{"what.item": "brocoli", "what.list": "grocery"},
         {"what": {"item": "brocoli", "list": "grocery"}},
     ),
     # (
@@ -39,7 +39,8 @@ class TestCommandParser(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.parser = Parser()
+        self.parser = Commander()
+        self.parser.setup()
 
     def test_parser(self):
         for scenario in self.scenarios:
@@ -56,7 +57,7 @@ class TestCommandParser(unittest.TestCase):
 #        diff = set(parsed) - set(result)
 #        self.assertEqual(len(diff), 0)
     def compare(self, before, after):
-        result = self.parser.parse(before)
+        result = self.parser.parse_command(before)
         self.assertDictEqual(result, after)
 
 if __name__ == '__main__':

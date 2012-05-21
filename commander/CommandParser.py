@@ -65,6 +65,7 @@ class Commander(object):
         result = tree()
 
         for parser in self.parsers:
+            #pdb.set_trace()
             if len(command) == 0:
                 # all done (or can't even get started)
                 break

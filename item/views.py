@@ -80,11 +80,11 @@ def run_command(request):
         parser_commander.setup()
 
         command = request.POST['command_text']
-        #pdb.set_trace()
         response_data = parser_commander.parse_command(command)
         user_command = UserCommand()
         #user_command.user = request.user
         user_command.original_data = command
+        #pdb.set_trace()
         user_command.convert_from(response_data)
         user_command.save()
         #return json.dumps(response_data)

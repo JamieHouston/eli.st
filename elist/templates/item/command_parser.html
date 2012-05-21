@@ -17,7 +17,7 @@ $(document).ready(function() {
                 {% csrf_token %}
         <div class="row-fluid">
             <h6>Command</h6>
-            <input type="text" placeholder="enter a command" id="command_text" name="command_text" class="input-large">
+            <input type="text" x-webkit-speech placeholder="enter a command" id="command_text" name="command_text" class="input-large">
             <input type="submit" value="do it" class="btn btn-success">
         </div>
     </form>
@@ -40,12 +40,21 @@ $(document).ready(function() {
     {{ #if action }}
     <div>Action: <span>{{ action}}</span></div>
     {{ /if }}
+    {{ #if what.item }}
     <div>What: <span class="data">{{ what.item }}</span></div>
+    {{ /if }}
     {{ #if what.list }}
     <div>List: <span class="data">{{ what.list }}</span></div>
     {{ /if}}
+    {{ #if when }}
     <div>When: <span class="data">{{ when.start_date }}</span></div>
+    {{ /if }}
+    {{ #if who }}
     <div>Who: <span class="data">{{ who }}</span></div>
+    {{ /if }}
+    {{ #results }}
+    <div><span>{{ item }}</span></div>
+    {{ /results }}
     <div>
         <i class="icon-trash delete-item"></i>
     </div>

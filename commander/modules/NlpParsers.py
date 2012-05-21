@@ -23,10 +23,10 @@ class ManualParser(object):
 
     def parse_command(self, command, result):
         parsed = self._parse_command(command)
-        return None, self.map_command(parsed)
+        return self.command_output, self.map_command(parsed)
 
-    def _parse_command(self, command_input):
-        chunks = command_input.lower().split(' ')
+    def _parse_command(self, command):
+        chunks = command.lower().split(' ')
         self.result = {}
 
         #if re.match('text', command_input):
@@ -97,11 +97,12 @@ class ManualParser(object):
                     chunk = words.singularize(chunk)
                 self.result[self.current].append(chunk)
         else:
-            self.current = "what.item"
-            if not self.current in self.result:
-                self.result[self.current] = []
-            if not (chunk == "the" and len(self.result[self.current]) == 0):
-                self.result[self.current].append(chunk)
+            self.command_output = " " + chunk
+        #     self.current = "what.item"
+        #     if not self.current in self.result:
+        #         self.result[self.current] = []
+        #     if not (chunk == "the" and len(self.result[self.current]) == 0):
+        #         self.result[self.current].append(chunk)
 
     def parse_text(self, chunks):
         self.new_type("what.list")
@@ -124,9 +125,6 @@ class ManualParser(object):
                 self.new_type("what.list", True)
             elif chunk == "with":
                 self.new_type("who")
-            elif chunk == "every":
-                self.new_type("when.recurrence")
-                self.result[self.current] = [chunk]
             elif chunk == "at":
                 self.new_type("when.start_time")
             elif chunk == "on":
@@ -135,5 +133,5 @@ class ManualParser(object):
                 self.add_default(chunk)
 
 parsers = (
-    ManualParser,
+#    ManualParser,
     )
