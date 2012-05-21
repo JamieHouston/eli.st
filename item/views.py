@@ -1,6 +1,6 @@
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from item.models import Item, Attribute
+from item.models import UserCommand
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core import serializers
@@ -82,6 +82,11 @@ def run_command(request):
         command = request.POST['command_text']
         #pdb.set_trace()
         response_data = parser_commander.parse_command(command)
+        user_command = UserCommand()
+        #user_command.user = request.user
+        user_command.original_data = command
+        user_command.convert_from(response_data)
+        user_command.save()
         #return json.dumps(response_data)
         return get_json_response(convert_context_to_json(response_data))
 
