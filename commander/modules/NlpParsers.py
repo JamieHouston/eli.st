@@ -133,5 +133,5 @@ class ManualParser(object):
                 self.add_default(chunk)
 
 parsers = (
-#    ManualParser,
+    ManualParser,
     )

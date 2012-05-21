@@ -74,7 +74,7 @@ class Commander(object):
             command, result = parser.parse_command(command, result)
 
         # TODO: Pull this into function as well:
-        if command and result["what"]["item"] is None:
+        if command and result.has_key("what") and result["what"].has_key("item") is None:
             result["what"]["item"] = command
 
         return result
