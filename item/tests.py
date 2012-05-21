@@ -2,7 +2,7 @@ from django.utils import unittest
 from item.models import Attribute, Item
 from django.contrib.auth.models import User
 import datetime
-from utils import nlp, transform
+from commander.utils import nlp, transform
 import pdb
 
 
