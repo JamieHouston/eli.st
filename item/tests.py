@@ -1,52 +1,51 @@
 from django.utils import unittest
-from item.models import Attribute, Item
 from django.contrib.auth.models import User
 import datetime
 from commander.utils import nlp, transform
 import pdb
 
 
-class UserTests(unittest.TestCase):
-    def setUp(self):
-        self.user = User(username="user1")
-        self.user.save()
+# class UserTests(unittest.TestCase):
+#     def setUp(self):
+#         self.user = User(username="user1")
+#         self.user.save()
 
-    def tearDown(self):
-        self.user.delete()
-
-
-class ItemTests(UserTests):
-    def test_user_can_have_items(self):
-
-        item1 = Item(name="item 1", created_by=self.user)
-        item1.save()
-        item2 = Item(name="item 2", created_by=self.user)
-        item2.save()
-
-        self.assertEqual(self.user.item_set.count(), 2)
+#     def tearDown(self):
+#         self.user.delete()
 
 
-class ItemAttributeTest(UserTests):
-    def test_item_can_have_attribute(self):
-        item = Item(name="item 1", created_by=self.user)
-        item.save()
+# class ItemTests(UserTests):
+#     def test_user_can_have_items(self):
 
-        item.add_attribute("priority", "important")
-        item.save()
+#         item1 = Item(name="item 1", created_by=self.user)
+#         item1.save()
+#         item2 = Item(name="item 2", created_by=self.user)
+#         item2.save()
 
-        self.assertEqual(item.itemattribute_set.count(), 1)
-        self.assertEqual(item.itemattribute_set.all()[0].value, "important")
+#         self.assertEqual(self.user.item_set.count(), 2)
 
-    def test_get_item_with_attribute(self):
-        attribute = Attribute.objects.create(name="attribute 1")
 
-        item = Item(name="item 1", created_by=self.user)
-        item.save()
+# class ItemAttributeTest(UserTests):
+#     def test_item_can_have_attribute(self):
+#         item = Item(name="item 1", created_by=self.user)
+#         item.save()
 
-        item.add_attribute(attribute.name, "value 1")
+#         item.add_attribute("priority", "important")
+#         item.save()
 
-        dbItem = attribute.item_set.all().get(pk=item.pk)
-        self.assertEqual(dbItem.pk, item.pk)
+#         self.assertEqual(item.itemattribute_set.count(), 1)
+#         self.assertEqual(item.itemattribute_set.all()[0].value, "important")
+
+    # def test_get_item_with_attribute(self):
+    #     attribute = Attribute.objects.create(name="attribute 1")
+
+    #     item = Item(name="item 1", created_by=self.user)
+    #     item.save()
+
+    #     item.add_attribute(attribute.name, "value 1")
+
+    #     dbItem = attribute.item_set.all().get(pk=item.pk)
+    #     self.assertEqual(dbItem.pk, item.pk)
 
 
 class NlpTests(unittest.TestCase):

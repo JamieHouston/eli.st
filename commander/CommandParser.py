@@ -2,13 +2,9 @@ import pdb
 import os
 import imp
 import sys
-from collections import defaultdict
+from utils.transform import tree
 
 home = os.path.dirname(__file__)
-
-
-def tree():
-    return defaultdict(tree)
 
 
 class Commander(object):
@@ -41,8 +37,6 @@ class Commander(object):
             print >> sys.stderr, 'Registered modules:', ', '.join(modules)
         else:
             print >> sys.stderr, "Warning: Couldn't find any modules"
-
-
 
     def register(self, module):
         def bind(self, func):

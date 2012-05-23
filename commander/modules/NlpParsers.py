@@ -117,14 +117,11 @@ class ManualParser(object):
         self.current = ""
         self.singularize = False
 
-        if chunks[0] == "add":
-            chunks = chunks[1:]
-
         for index, chunk in enumerate(chunks):
             if chunk == "to" and self.current == "what.item":
                 self.new_type("what.list", True)
             elif chunk == "with":
-                self.new_type("who")
+                self.new_type("who.person")
             elif chunk == "at":
                 self.new_type("when.start_time")
             elif chunk == "on":
