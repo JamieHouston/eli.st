@@ -10,7 +10,8 @@ class AddToList(object):
         to_parse = command.lower()
         matches = self.regexp.match(to_parse)
 #        pdb.set_trace()
-        if matches:
+        if matches and matches.groupdict():
+            result["action"] = "add"
             matches = matches.groupdict()
             for key in matches:
                 # TODO: Compile sub

@@ -1,7 +1,8 @@
 import pdb
 import json
 import unittest
-from CommandParser import Commander
+import CommandParser
+import modules
 import os
 import sys
 
@@ -12,38 +13,36 @@ class TestCommandParser(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.parser = Commander()
+        self.parser = CommandParser.Commander()
         self.parser.setup()
+
         module_path = os.path.join(home, 'tests')
         filenames = []
-        self.tests = []
+        self.tests = {}
 
         for fn in os.listdir(module_path):
             if fn.endswith('.py') and not fn.startswith('_'):
-                        filenames.append(os.path.join(home, 'tests', fn))
+                filenames.append(os.path.join(home, 'tests', fn))
 
         for filename in filenames:
-            pdb.set_trace()
-            self.tests.append(json.load(open(filename)))
-            # name = os.path.basename(filename)[:-3]
-            # try:
-            #     module = imp.load_source(name, filename)
-            # except Exception, e:
-            #     print >> sys.stderr, "Error loading %s: %s (in Commander.py)" % (name, e)
-            # else:
-
-            #     self.register(module)
-            #     modules.append(name)
-
+            #pdb.set_trace()
+            data = json.load(open(filename))
+            name = os.path.basename(filename)[:-3].replace("Test","")
+            self.tests[name] = data
 
     def test_parsers(self):
-        pdb.set_trace()
-        for key in self.tests:
-            pass
-
-
-
-
+        #pdb.set_trace()
+        for parser in self.parser.parsers:
+            if parser.__module__ in self.tests:
+                parser_tests = self.tests[parser.__module__]
+                if parser.name in parser_tests:
+                    test_cases = parser_tests[parser.name]
+                    for test_case in test_cases:
+                        #pdb.set_trace()
+                        result = CommandParser.tree()
+                        command, output = parser.parse_command(test_case["command"], result)
+                        #self.assertEqual(output, test_case["result"])
+                        self.assertDictEqual(output, test_case["result"])
     # scenarios = (
     # (
     #     ["Add brocoli to grocery", "add brocoli to the grocery list"],

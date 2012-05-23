@@ -1,4 +1,1 @@
-"tests": {'AddToList': [
-	{"Add brocoli to grocery":{"what": {"item": "brocoli", "list": "grocery"}}},
-	{"add brocoli to the grocery list": {"what": {"item": "brocoli", "list": "grocery"}}}
-]}
+{"AddToList": [{"command": "Add brocoli to grocery", "result": {"action":"add", "what": {"item": "brocoli", "list": "grocery"}}},{"command": "add brocoli to the grocery list", "result": {"action":"add", "what": {"item": "brocoli", "list": "grocery"}}}]}

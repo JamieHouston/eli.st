@@ -85,13 +85,15 @@ def run_command(request):
         #user_command.user = request.user
         user_command.original_data = command
         #pdb.set_trace()
+        if response_data["why"]["command"] == "search":
+            model_results = WhatCommand.objects.filter(list=response_data["what"]["list"])
+            results = [{"pk": what_command.pk, "item": what_command.item} for what_command in model_results]
+            if results:
+                response_data["results"] = results
         user_command.convert_from(response_data)
         user_command.save()
-        #return json.dumps(response_data)
-        return get_json_response(convert_context_to_json(response_data))
 
-        #return HttpResponse(json.dumps(response_data))
-        #return HttpResponse(json.dumps(response_data), mimetype="application/json")
+        return get_json_response(convert_context_to_json(response_data))
     else:
         return render_to_response('item/command_parser.html', {},
              context_instance=RequestContext(request))

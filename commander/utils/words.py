@@ -1,35 +1,33 @@
-import re
- 
-SINGULARS= [
-    (r's$', ''),
-    (r'(n)ews$', '\1ews'),
-    (r'([ti])a$', '\1um'),
-    (r'((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$', '\1\2sis'),
-    (r'(^analy)ses$', '\1sis'),
-    (r'([^f])ves$', '\1fe'),
-    (r'(hive)s$', '\1'),
-    (r'(tive)s$', '\1'),
-    (r'([lr])ves$', '\1f'),
-    (r'([^aeiouy]|qu)ies$', '\1y'),
-    (r'(s)eries$', '\1eries'),
-    (r'(m)ovies$', '\1ovie'),
-    (r'(x|ch|ss|sh)es$', '\1'),
-    (r'([m|l])ice$', '\1ouse'),
-    (r'(bus)es$', '\1'),
-    (r'(o)es$', '\1'),
-    (r'(shoe)s$', '\1'),
-    (r'(cris|ax|test)es$', '\1is'),
-    (r'(octop|vir)i$', '\1us'),
-    (r'(alias|status)es$', '\1'),
-    (r'^(ox)en', '\1'),
-    (r'(vert|ind)ices$', '\1ex'),
-    (r'(matr)ices$', '\1ix'),
-    (r'(quiz)zes$', '\1'),
-    ]
- 
+# from http://codelog.blogial.com/2008/07/27/singular-form-of-a-word-in-python/
+
 def singularize(word):
-    for pattern,replacement in SINGULARS:
-      word, n =  re.subn(pattern, replacement, word)
-      if n>0:
-        break
-    return word
+    """Return the singular form of a word
+
+    &gt;&gt;&gt; singularize('rabbits')
+    'rabbit'
+    &gt;&gt;&gt; singularize('potatoes')
+    'potato'
+    &gt;&gt;&gt; singularize('leaves')
+    'leaf'
+    &gt;&gt;&gt; singularize('knives')
+    'knife'
+    &gt;&gt;&gt; singularize('spies')
+    'spy'
+    """
+    sing_rules = [lambda w: w[-3:] == 'ies' and w[:-3] + 'y',
+                  lambda w: w[-4:] == 'ives' and w[:-4] + 'ife',
+                  lambda w: w[-3:] == 'ves' and w[:-3] + 'f',
+                  lambda w: w[-2:] == 'es' and w[:-2],
+                  lambda w: w[-1:] == 's' and w[:-1],
+                  lambda w: w,
+                  ]
+    word = word.strip()
+    singleword = [f(word) for f in sing_rules if f(word) is not False][0]
+    return singleword
+
+def _test():
+    import doctest
+    doctest.testmod()
+
+if __name__ == '__main__':
+    _test()

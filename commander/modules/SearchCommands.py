@@ -1,4 +1,4 @@
-from item.models import WhatCommand
+#from item.models import WhatCommand
 import re
 import pdb
 from utils import words
@@ -16,12 +16,9 @@ class SearchItems(object):
             item_list = matches.groupdict()["request"]
             if len(item_list.split()) == 1:
                 item_list = words.singularize(item_list)
-            model_results = WhatCommand.objects.filter(list=item_list)
-            results = [{"pk": what_command.pk, "item": what_command.item} for what_command in model_results]
-            if results:
                 result["action"] = "search"
-                result["results"] = results
-
+                result["what"]["list"] = item_list
+                command = ""
         return command, result
 
 SearchItems.command_regex = r'(view|search for|show me) (my )?(?P<request>[\w\d]*)( list)?'
