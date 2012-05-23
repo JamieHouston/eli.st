@@ -94,6 +94,14 @@ def run_command(request):
         user_command.convert_from(response_data)
         user_command.save()
 
+        # TODO: Pull this into stringifier to make view data pretty.  NOT HERE!
+        if "when" in response_data:
+            if "start_time" in response_data["when"]:
+                t = response_data["when"]["start_time"]
+                response_data["when"]["start_time"] = "{0}:{1}".format(str(t.hour).ljust(2,"0"),str(t.minute).ljust(2,"0"))
+            if "start_date" in response_data["when"]:
+                d = response_data["when"]["start_date"]
+                response_data["when"]["start_date"] = d.strftime("%A %d %B %Y")
         return get_json_response(convert_context_to_json(response_data))
     else:
         return render_to_response('item/command_parser.html', {},

@@ -1,6 +1,9 @@
+from datetime import date, time, datetime
+from time import mktime
+import utils.parsedatetime as pdt
+import utils.parsedatetime_consts as pdc
 import pdb
 import re
-
 
 class AddToList(object):
     def __init__(self):
@@ -26,6 +29,43 @@ class AddToList(object):
 AddToList.command_regex = r'(add )(?P<item>[\w\d]*)( to )(the )?(?P<list>[\w\d]*)( list)?'
 AddToList.example = 'Add carrots to the grocery list'
 
+
+class NaturalDate(object):
+    def __init__(self):
+        c = pdc.Constants()
+        c.BirthdayEpoch = 12
+        self.parser = pdt.Calendar(c)
+
+    def parse_natural_datetime(self, text_input):
+        parsed, result_type = self.parser.parse(text_input)
+        if result_type == 1:
+            # found a date
+            return_value = date.fromtimestamp(mktime((parsed[0], parsed[1], parsed[2], 0, 0, 0, 0, 0, 0)))
+        elif result_type == 2:
+            # found a time
+            return_value = time(parsed[3], parsed[4])
+        elif result_type == 3:
+            # found a datetime
+            return_value = datetime.fromtimestamp(mktime(parsed))
+        else:
+            return_value = None
+
+        return return_value, result_type
+
+    def parse_command(self, command, result):
+        parsed, result_type = self.parse_natural_datetime(command)
+
+        if result_type == 1:
+            result["when"]["start_date"] = parsed
+        elif result_type == 2:
+            result["when"]["start_time"] = parsed
+        elif result_type == 3:
+            result["when"]["start_date"] = parsed.date()
+            result["when"]["start_time"] = parsed.time()
+
+        return command, result
+
+NaturalDate.example = 'Write some code tomorrow'
 
 # class RecurrenceFinder(object):
 #     def __init__(self):
@@ -53,5 +93,6 @@ AddToList.example = 'Add carrots to the grocery list'
 
 parsers = (
     AddToList,
+    NaturalDate,
 #    RecurrenceFinder,
     )

@@ -67,35 +67,11 @@ class UserCommand(models.Model):
 
     def convert_from(self, command_dictionary):
         for key in command_dictionary.keys():
-            #if hasattr(self, key):
-            #    self[key] =
-            pdb.set_trace()
-            if key == "what":
-                obj = WhatCommand()
+            class_name = key.capitalize() + "Command"
+            if class_name in globals():
+                obj = globals()[class_name]()
                 for val in command_dictionary[key].iterkeys():
                     if hasattr(obj, val):
                         setattr(obj, val, command_dictionary[key][val])
-                #what.item = command_dictionary[key]["item"]
-                #what.list = command_dictionary[key]["list"]
                 obj.save()
-                self[key] = obj
-            elif key == "when":
-                when = WhenCommand()
-                when.start_date = command_dictionary[key]["start_date"]
-                when.start_time = command_dictionary[key]["start_time"]
-                when.end_date = command_dictionary[key]["end_date"]
-                when.save()
-                self.when = when
-                #self.when = WhenCommand(command_dictionary[key])
-            elif key == "where":
-                where = WhereCommand()
-                where.location = command_dictionary[key]["location"]
-                where.save()
-                self.where = where
-                #self.where = WhereCommand(command_dictionary[key])
-            elif key == "who":
-                who = WhoCommand()
-                who.person = command_dictionary[key]["person"]
-                who.save()
-                self.who = who
-                #self.who = WhoCommand(command_dictionary[key])
+                setattr(self, key, obj)
