@@ -1,4 +1,6 @@
 Learn lists
+
+Learn corrections - after the user recieves a command back, if they change something, create a regex to capture that. Maybe use the original regex, but change whatever the new parameter is?
 "Add brocoli to grocery" - creates "grocery" list
 "Grocery" - shows everything on grocery list
 

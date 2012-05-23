@@ -80,12 +80,13 @@ def run_command(request):
         parser_commander.setup()
 
         command = request.POST['command_text']
+        #pdb.set_trace()
         response_data = parser_commander.parse_command(command)
         user_command = UserCommand()
         #user_command.user = request.user
         user_command.original_data = command
         #pdb.set_trace()
-        if response_data["why"]["command"] == "search":
+        if "action" in response_data and response_data["action"] == "search":
             model_results = WhatCommand.objects.filter(list=response_data["what"]["list"])
             results = [{"pk": what_command.pk, "item": what_command.item} for what_command in model_results]
             if results:

@@ -9,20 +9,21 @@ class AddToList(object):
     def parse_command(self, command, result):
         to_parse = command.lower()
         matches = self.regexp.match(to_parse)
-#        pdb.set_trace()
         if matches and matches.groupdict():
             result["action"] = "add"
-            matches = matches.groupdict()
-            for key in matches:
+            found = matches.groupdict()
+            for key in found:
                 # TODO: Compile sub
-                text = matches[key]
-                re.sub(text, '', command)
+                text = found[key]
+                to_parse = re.sub(text, '', to_parse)
 
                 result["what"][key] = text
+            for group in matches.groups():
+                if group is not None and len(group):
+                    to_parse = to_parse.replace(group, '')
+        return to_parse, result
 
-        return command, result
-
-AddToList.command_regex = r'add (?P<item>[\w\d]*) to (the )?(?P<list>[\w\d]*)(list)?'
+AddToList.command_regex = r'(add )(?P<item>[\w\d]*)( to )(the )?(?P<list>[\w\d]*)( list)?'
 AddToList.example = 'Add carrots to the grocery list'
 
 
