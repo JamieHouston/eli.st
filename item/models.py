@@ -64,6 +64,7 @@ class UserCommand(models.Model):
     what = models.ForeignKey(WhatCommand, blank=True, null=True)
     who = models.ForeignKey(WhoCommand, blank=True, null=True)
     when = models.ForeignKey(WhenCommand, blank=True, null=True)
+    where = models.ForeignKey(WhereCommand, blank=True, null=True)
 
     def convert_from(self, command_dictionary):
         for key in command_dictionary.keys():
@@ -75,3 +76,28 @@ class UserCommand(models.Model):
                         setattr(obj, val, command_dictionary[key][val])
                 obj.save()
                 setattr(self, key, obj)
+
+    def humanify(self):
+        result = ""
+        if self.what:
+            if self.what.item:
+                result += self.what.item + " "
+            if self.what.list:
+                result += " on " + self.what.list + " list "
+        if self.who:
+            if self.who.person:
+                result += "with " + self.who.person + " "
+        if self.when:
+            if self.when.start_date:
+                result += " on " + self.when.start_date.strftime("%A %d %B %Y") + " "
+            if self.when.start_time:
+                result += " at " + self.when.start_time.strftime("%I:%M %p") + " "
+            if self.when.end_date:
+                result += " on " + self.when.end_date.strftime("%A %d %B %Y") + " "
+        if self.where:
+            if self.where.location:
+                result += " at " + self.where.location + " "
+        return result.strip()
+
+    def __unicode__(self):
+        return self.humanify();
