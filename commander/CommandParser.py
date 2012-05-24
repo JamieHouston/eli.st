@@ -72,8 +72,9 @@ class Commander(object):
             # TODO: is this the right way to do this?
             command, result = parser.parse_command(command, result)
 
+        pdb.set_trace()
         # TODO: Pull this into function as well:
-        if command and result.has_key("what") and result["what"].has_key("item") is None:
+        if command and ("what" not in result or "item" not in result["item"]):
             result["what"]["item"] = command
 
         return result

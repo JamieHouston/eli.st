@@ -36,10 +36,20 @@ class NaturalDate(object):
         c.BirthdayEpoch = 12
         self.parser = pdt.Calendar(c)
 
+    def clean_string(self, text):
+        if text.endswith("on")
+            return text[:(len(text)-4)]
+        return text
+
     def parse_natural_datetime(self, text_input):
-        parsed, result_type = self.parser.parse(text_input)
+        #pdb.set_trace()
+        parsed, result_type, parts_to_remove = self.parser.parse(text_input)
+
+        for part in filter(lambda p: len(p), parts_to_remove):
+            text_input = text_input.replace(part, '').strip()
         if result_type == 1:
             # found a date
+            text_input = self.clean_string(text_input)
             return_value = date.fromtimestamp(mktime((parsed[0], parsed[1], parsed[2], 0, 0, 0, 0, 0, 0)))
         elif result_type == 2:
             # found a time
@@ -50,10 +60,10 @@ class NaturalDate(object):
         else:
             return_value = None
 
-        return return_value, result_type
+        return text_input, return_value, result_type
 
     def parse_command(self, command, result):
-        parsed, result_type = self.parse_natural_datetime(command)
+        command, parsed, result_type = self.parse_natural_datetime(command)
 
         if result_type == 1:
             result["when"]["start_date"] = parsed

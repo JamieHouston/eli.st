@@ -1,3 +1,4 @@
+import pdb
 #!/usr/bin/env python
 
 """
@@ -22,7 +23,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-_debug = False
+_debug = True
 
 
 import re
@@ -1184,7 +1185,7 @@ class Calendar:
         @rtype:  tuple
         @return: tuple of: modified C{sourceTime} and the result flag
         """
-
+        #pdb.set_trace()
         if sourceTime:
             if isinstance(sourceTime, datetime.datetime):
                 if _debug:
@@ -1207,6 +1208,7 @@ class Calendar:
 
         self.timeFlag = 0
         self.dateFlag = 0
+        self.used_parts = []
 
         while len(s) > 0:
             flag   = False
@@ -1428,8 +1430,12 @@ class Calendar:
             if not flag:
                 s = ''
 
+            self.used_parts.append(parseStr)
+            self.used_parts.append(chunk2)
             if _debug:
                 print 'parse (bottom) [%s][%s][%s][%s]' % (s, parseStr, chunk1, chunk2)
+                print "should keep '{0}' and '{1}' if it's anything".format(s, chunk1)
+                print "should remove '{0}' and '{1}' if it's anything".format(parseStr, chunk2)
                 print 'weekday %s, dateStd %s, dateStr %s, time %s, timeStr %s, meridian %s' % \
                        (self.weekdyFlag, self.dateStdFlag, self.dateStrFlag, self.timeStdFlag, self.timeStrFlag, self.meridianFlag)
                 print 'dayStr %s, modifier %s, modifier2 %s, units %s, qunits %s' % \
@@ -1473,7 +1479,7 @@ class Calendar:
             self.dateFlag = 0
             self.timeFlag = 0
 
-        return (totalTime, self.dateFlag + self.timeFlag)
+        return (totalTime, self.dateFlag + self.timeFlag, self.used_parts)
 
 
     def inc(self, source, month=None, year=None):
