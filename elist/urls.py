@@ -44,4 +44,9 @@ urlpatterns = patterns('',
     #url(r'^attribute/add/$', 'item.views.add_attribute', name='add_attribute'),
     url(r'^command/$', 'item.views.run_command', name='run_command'),
     url(r'', include('social_auth.urls')),
+    url(r'^sms/$', 'django_twilio.views.sms', {
+        'message': 'Normally this would be the list',
+        'to': '+12068522852',
+        'sender': '+18005551234'
+    }),
 )

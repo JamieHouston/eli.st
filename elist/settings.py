@@ -114,6 +114,7 @@ INSTALLED_APPS = (
     #'south',
     #'debug_toolbar',
     'django_extensions',
+    'django_twilio',
 )
 
 LOGGING = {

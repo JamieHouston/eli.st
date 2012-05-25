@@ -27,7 +27,13 @@ elist.UI = elist.UI || {};
             });
 
             $('#command_text').focus();
+
+            $('body').on('click','.send-sms', sendSms);
         };
+
+        function sendSms(){
+            $.ajax("/sms/");
+        }
 
         function showCommandResults(result){
             showCommandResult(result);
