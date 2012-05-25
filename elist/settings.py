@@ -112,7 +112,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'templatetag_handlebars',
     #'south',
-    'debug_toolbar',
+    #'debug_toolbar',
     'django_extensions',
 )
 

@@ -38,7 +38,7 @@ class NaturalDate(object):
 
     def clean_string(self, text):
         if text.endswith("on"):
-            return text[:(len(text)-4)]
+            return text[:(len(text) - 3)]
         return text
 
     def parse_natural_datetime(self, text_input):
@@ -63,7 +63,7 @@ class NaturalDate(object):
         return text_input, return_value, result_type
 
     def parse_command(self, command, result):
-        command, parsed, result_type = self.parse_natural_datetime(command)
+        command, parsed, result_type = self.parse_natural_datetime(command.lower())
 
         if result_type == 1:
             result["when"]["start_date"] = parsed
@@ -73,36 +73,40 @@ class NaturalDate(object):
             result["when"]["start_date"] = parsed.date()
             result["when"]["start_time"] = parsed.time()
 
+        if result_type:
+            result["action"] = "add"
+
         return command, result
 
 NaturalDate.example = 'Write some code tomorrow'
 
-# class RecurrenceFinder(object):
-#     def __init__(self):
-#         self.regexp = re.compile(self.command_regex)
 
-#     def parse_command(self, command, result):
-#         to_parse = command.lower()
-#         matches = self.regexp.match(to_parse)
-#         #pdb.set_trace()
-#         if matches:
-#             for key in matches.groupdict():
-#                 # TODO: Compile sub
-#                 re.sub(key, '', command)
+class RecurrenceFinder(object):
+    def __init__(self):
+        self.regexp = re.compile(self.command_regex)
 
-#                 result["what"][key] = matches[key]
+    def parse_command(self, command, result):
+        to_parse = command.lower()
+        matches = self.regexp.match(to_parse)
+        #pdb.set_trace()
+        if matches:
+            #pdb.set_trace()
+            result["action"] = "add"
+            result[""]
+            pairs = matches.groupdict()
+            frequency = pairs["frequency"]
+            to_parse = re.sub(frequency, '', to_parse)
+            result["when"]["recurrence"]["frequency"] = 1 if frequency == "every" else 2
+            result["when"]["recurrence"]["day"] = pairs["period"]
 
-#         return command, result
-# RecurrenceFinder.example = 'Do something every other month'
-
-
-
+        return to_parse, result
+RecurrenceFinder.command_regex = r'.+\s(?P<frequency>every\sother|every)\s(?P<period>\w+).*'
+RecurrenceFinder.example = 'Do something every other month'
 
 #class Shortcuts(Parser):
 #    commandRegex = r'(?P<list>[\w\d]*):(?P<item>[\w\d]*)'
-
 parsers = (
     AddToList,
     NaturalDate,
-#    RecurrenceFinder,
+    RecurrenceFinder,
     )

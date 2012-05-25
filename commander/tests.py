@@ -3,6 +3,7 @@ import json
 import unittest
 import CommandParser
 import modules
+import imp
 import os
 import sys
 
@@ -26,9 +27,21 @@ class TestCommandParser(unittest.TestCase):
 
         for filename in filenames:
             #pdb.set_trace()
-            data = json.load(open(filename))
-            name = os.path.basename(filename)[:-3].replace("Test","")
-            self.tests[name] = data
+            #name = os.path.basename(filename)[:-3].replace("Test", "")
+            #module = imp.load_source(name, filename)
+            for parser in self.parser.parsers:
+                module_name = parser.__module__
+                module = self.get_module_from("tests.Test" + module_name)
+                if hasattr(module, module_name):
+                    data = getattr(module, module_name)()
+                    self.tests[module_name] = data
+
+    def get_module_from(self, name):
+        mod = __import__(name)
+        components = name.split('.')
+        for comp in components[1:]:
+            mod = getattr(mod, comp)
+        return mod
 
     def test_parsers(self):
         #pdb.set_trace()
@@ -43,6 +56,9 @@ class TestCommandParser(unittest.TestCase):
                         command, output = parser.parse_command(test_case["command"], result)
                         #self.assertEqual(output, test_case["result"])
                         self.assertDictEqual(output, test_case["result"])
+                        if "result_command" in test_case:
+                            self.assertEqual(command, test_case["result_command"])
+                        print "Passed {0}:{1}".format(parser.__module__, parser.name)
     # scenarios = (
     # (
     #     ["Add brocoli to grocery", "add brocoli to the grocery list"],

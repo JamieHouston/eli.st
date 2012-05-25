@@ -38,9 +38,10 @@ def run_command(request):
             search_list = response_data["what"]["list"]
             if search_list == "all" or search_list == "all items":
                 model_results = UserCommand.objects.all()
+                results = [{"pk": user_command.pk, "item": user_command.humanify()} for user_command in model_results]
             else:
                 model_results = UserCommand.objects.filter(what__list=search_list)
-            results = [{"pk": user_command.pk, "item": user_command.humanify()} for user_command in model_results]
+                results = [{"pk": user_command.pk, "item": user_command.what.item} for user_command in model_results]
             if results:
                 response_data["results"] = results
             return get_json_response(convert_context_to_json(response_data))
