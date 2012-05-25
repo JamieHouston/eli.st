@@ -4,6 +4,7 @@ from item.models import UserCommand, WhatCommand
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core import serializers
+from datetime import time
 #from utils.nlp import Parser
 from commander.CommandParser import Commander
 import json
@@ -49,16 +50,8 @@ def run_command(request):
             user_command.convert_from(response_data)
             user_command.save()
 
-        # TODO: Pull this into stringifier to make view data pretty.  NOT HERE!
-        # if "when" in response_data:
-        #     if "start_time" in response_data["when"]:
-        #         t = response_data["when"]["start_time"]
-        #         response_data["when"]["start_time"] = "{0}:{1}".format(str(t.hour).ljust(2,"0"),str(t.minute).ljust(2,"0"))
-        #     if "start_date" in response_data["when"]:
-        #         d = response_data["when"]["start_date"]
-        #         response_data["when"]["start_date"] = d.strftime("%A %d %B %Y")
-        #return get_json_response(convert_context_to_json(response_data))
-            return get_json_response(convert_context_to_json({"command": user_command.humanify()}))
+            response_data["command"] = user_command.humanify()
+            return get_json_response(convert_context_to_json(response_data))
 
     else:
         return render_to_response('item/command_parser.html', {},
@@ -71,6 +64,14 @@ def get_json_response(content, **httpresponse_kwargs):
                              content_type='application/json',
                              **httpresponse_kwargs)
 
+def handler(obj):
+    if hasattr(obj, 'strftime'):
+        if isinstance(obj, time):
+            return obj.strftime("%I:%M %p")
+        else:
+            return obj.strftime("%A %d %B %Y")
+    else:
+        raise TypeError, 'Object of type %s with value of %s is not JSON serializable' % (type(obj), repr(obj))
 
 def convert_context_to_json(context):
     "Convert the context dictionary into a JSON object"
@@ -78,4 +79,4 @@ def convert_context_to_json(context):
     # to do much more complex handling to ensure that arbitrary
     # objects -- such as Django model instances or querysets
     # -- can be serialized as JSON.
-    return json.dumps(context)
+    return json.dumps(context, default=handler)

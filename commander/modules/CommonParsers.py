@@ -37,8 +37,9 @@ class NaturalDate(object):
         self.parser = pdt.Calendar(c)
 
     def clean_string(self, text):
-        if text.endswith("on"):
-            return text[:(len(text) - 3)]
+        for stop_word in ("on", "at"):
+            if text.endswith(stop_word):
+               return text[:(len(text) - len(stop_word))]
         return text
 
     def parse_natural_datetime(self, text_input):
@@ -46,10 +47,13 @@ class NaturalDate(object):
         parsed, result_type, parts_to_remove = self.parser.parse(text_input)
 
         for part in filter(lambda p: len(p), parts_to_remove):
-            text_input = text_input.replace(part, '').strip()
+            pieces = part.split()
+            for piece in pieces:
+                text_input = text_input.replace(piece, '').strip()
+
+        text_input = self.clean_string(text_input)
         if result_type == 1:
             # found a date
-            text_input = self.clean_string(text_input)
             return_value = date.fromtimestamp(mktime((parsed[0], parsed[1], parsed[2], 0, 0, 0, 0, 0, 0)))
         elif result_type == 2:
             # found a time
@@ -81,6 +85,30 @@ class NaturalDate(object):
 NaturalDate.example = 'Write some code tomorrow'
 
 
+class PersonFinder(object):
+    def __init__(self):
+        self.regexp = re.compile(self.command_regex)
+
+    def parse_command(self, command, result):
+        to_parse = command.lower()
+        matches = self.regexp.match(to_parse)
+        if matches and matches.groupdict():
+            result["action"] = "add"
+            found = matches.groupdict()
+            for key in found:
+                # TODO: Compile sub
+                text = found[key]
+                to_parse = re.sub(text, '', to_parse)
+
+                result["who"][key] = text
+            for group in matches.groups():
+                if group is not None and len(group):
+                    to_parse = to_parse.replace(group, '')
+        return to_parse, result
+PersonFinder.command_regex = r'.*(with\s)(?P<person>.+)'
+PersonFinder.example = 'Party with Lisa'
+
+
 class RecurrenceFinder(object):
     def __init__(self):
         self.regexp = re.compile(self.command_regex)
@@ -92,7 +120,6 @@ class RecurrenceFinder(object):
         if matches:
             #pdb.set_trace()
             result["action"] = "add"
-            result[""]
             pairs = matches.groupdict()
             frequency = pairs["frequency"]
             to_parse = re.sub(frequency, '', to_parse)
@@ -108,5 +135,6 @@ RecurrenceFinder.example = 'Do something every other month'
 parsers = (
     AddToList,
     NaturalDate,
+    PersonFinder,
     RecurrenceFinder,
     )

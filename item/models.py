@@ -41,14 +41,24 @@ class WhatCommand(models.Model):
     item = models.CharField(max_length=255, blank=True, null=True)
     list = models.CharField(max_length=100, blank=True, null=True)
 
+    def __unicode__(self):
+        return "{0}{1}{2} ".format(self.list or "",
+            ": " if self.list else "",
+            self.item)
+
 
 class WhoCommand(models.Model):
     person = models.CharField(max_length=100, blank=True, null=True)
+
+    def __unicode__(self):
+        return "with {0} ".format(self.person)
 
 
 class WhereCommand(models.Model):
     location = models.CharField(max_length=255, blank=True, null=True)
 
+    def __unicode__(self):
+        return "at {0} ".format(self.location)
 
 class WhenCommand(models.Model):
     start_date = models.DateField(null=True, blank=True)
@@ -57,6 +67,15 @@ class WhenCommand(models.Model):
     recurrence = models.CharField(max_length=100, blank=True, null=True)
     #recurring = TimedeltaField(blank=True)
 
+    def __unicode__(self):
+        result = ""
+        if self.start_time:
+            result = "at {0} ".format(self.start_time.strftime("%I:%M %p"))
+        if self.start_date:
+            result += "on {0} ".format(self.start_date.strftime("%A %d %B %Y"))
+        if self.end_date:
+            result += "until {0} ".format(self.end_date.strftime("%A %d %B %Y"))
+        return result
 
 class UserCommand(models.Model):
     user = models.ForeignKey(User, null=True)
@@ -78,26 +97,11 @@ class UserCommand(models.Model):
                 setattr(self, key, obj)
 
     def humanify(self):
-        result = ""
-        if self.what:
-            if self.what.item:
-                result += self.what.item + " "
-            if self.what.list:
-                result += " on " + self.what.list + " list "
-        if self.who:
-            if self.who.person:
-                result += "with " + self.who.person + " "
-        if self.when:
-            if self.when.start_date:
-                result += " on " + self.when.start_date.strftime("%A %d %B %Y") + " "
-            if self.when.start_time:
-                result += " at " + self.when.start_time.strftime("%I:%M %p") + " "
-            if self.when.end_date:
-                result += " on " + self.when.end_date.strftime("%A %d %B %Y") + " "
-        if self.where:
-            if self.where.location:
-                result += " at " + self.where.location + " "
-        return result.strip()
+        return "{0}{1}{2}{3}".format(
+            self.what or "",
+            self.who or "",
+            self.when or "",
+            self.where or "").strip()
 
     def __unicode__(self):
         return self.humanify();

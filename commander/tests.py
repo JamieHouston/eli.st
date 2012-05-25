@@ -51,7 +51,7 @@ class TestCommandParser(unittest.TestCase):
                 if parser.name in parser_tests:
                     test_cases = parser_tests[parser.name]
                     for test_case in test_cases:
-                        #pdb.set_trace()
+                        pdb.set_trace()
                         result = CommandParser.tree()
                         command, output = parser.parse_command(test_case["command"], result)
                         #self.assertEqual(output, test_case["result"])

@@ -29,6 +29,19 @@ def CommonParsers():
                 "result_command": "visit grandma"
             }
         ],
+        "PersonFinder":
+        [
+            {
+                "command": "Party with Lisa",
+                "result": {
+                    "action": "add",
+                    "who":
+                        {"person": "lisa"}
+                },
+                "result_command": "party"
+            }
+        ],
+
         "RecurrenceFinder":
         [
             {
