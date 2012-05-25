@@ -37,7 +37,7 @@ class NaturalDate(object):
         self.parser = pdt.Calendar(c)
 
     def clean_string(self, text):
-        if text.endswith("on")
+        if text.endswith("on"):
             return text[:(len(text)-4)]
         return text
 

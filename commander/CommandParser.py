@@ -64,15 +64,15 @@ class Commander(object):
         result = tree()
 
         for parser in self.parsers:
-            #pdb.set_trace()
             if len(command) == 0:
                 # all done (or can't even get started)
                 break
 
             # TODO: is this the right way to do this?
+            #pdb.set_trace()
+
             command, result = parser.parse_command(command, result)
 
-        pdb.set_trace()
         # TODO: Pull this into function as well:
         if command and ("what" not in result or "item" not in result["item"]):
             result["what"]["item"] = command

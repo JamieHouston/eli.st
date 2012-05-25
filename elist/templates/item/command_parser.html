@@ -55,13 +55,13 @@ $(document).ready(function() {
     {{ #if who }}
     <div>Who: <span class="data">{{ who.person }}</span></div>
     {{ /if }}
-    {{ #results }}
-    <div><span>{{ item }}</span></div>
-    {{ /results }}
-    <div>
-        <i class="icon-trash delete-item"></i>
-    </div>
 </div>
+    {{ #results }}
+    <div class="alert alert-success">
+        <button class="close" data-dismiss="alert">×</button>
+        <div>{{ item }}</div>
+    </div>
+    {{ /results }}
 {% endtplhandlebars %}
 
 {% endblock %}
