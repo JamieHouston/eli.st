@@ -27,7 +27,18 @@ def CommonParsers():
                         {"start_date": friday}
                 },
                 "result_command": "visit grandma"
+            },
+            {
+            "command": "PT next Friday at 4PM",
+                "result": {
+                    "action": "add",
+                    "when":
+                        {"start_date": friday,
+                        "start_time": "14:00"}
+                },
+                "result_command": "PT"
             }
+
         ],
         "PersonFinder":
         [
